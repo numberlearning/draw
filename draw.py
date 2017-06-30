@@ -30,7 +30,7 @@ write_n = 5 # write glimpse grid width/height
 read_size = 2*read_n*read_n if FLAGS.read_attn else 2*img_size
 write_size = write_n*write_n if FLAGS.write_attn else img_size
 z_size=10 # QSampler output size
-T=10 # MNIST generation sequence length
+T=100 # MNIST generation sequence length
 batch_size=100 # training minibatch size
 train_iters=10000
 learning_rate=1e-3 # learning rate for optimizer
@@ -70,6 +70,9 @@ def filterbank(gx, gy, sigma2,delta, N):
     Fy=Fy/tf.maximum(tf.reduce_sum(Fy,2,keep_dims=True),eps)
     return Fx,Fy
 
+gx_list = list()
+gy_list = list()
+
 def attn_window(scope,h_dec,N):
     with tf.variable_scope(scope,reuse=DO_SHARE):
         params=linear(h_dec,5)
@@ -77,6 +80,8 @@ def attn_window(scope,h_dec,N):
     gx_,gy_,log_sigma2,log_delta,log_gamma=tf.split(params,5,1)
     gx=(A+1)/2*(gx_+1)
     gy=(B+1)/2*(gy_+1)
+    gx_list.append(gx)
+    gy_list.append(gy)
     sigma2=tf.exp(log_sigma2)
     delta=(max(A,B)-1)/(N-1)*tf.exp(log_delta) # batch x N
     return filterbank(gx,gy,sigma2,delta,N)+(tf.exp(log_gamma),)
@@ -227,18 +232,22 @@ for i in range(train_iters):
 	results=sess.run(fetches,feed_dict)
 	Lxs[i],Lzs[i],_=results
 	if i%100==0:
-		print("iter=%d : Lx: %f Lz: %f" % (i,Lxs[i],Lzs[i]))
+                print("gx_list: ")
+                print(sess.run(gx_list, feed_dict))
+                print("gy_list: ")
+                print(sess.run(gy_list, feed_dict))
+               	print("iter=%d : Lx: %f Lz: %f" % (i,Lxs[i],Lzs[i]))
 
 ## TRAINING FINISHED ## 
 
 canvases=sess.run(cs,feed_dict) # generate some examples
 canvases=np.array(canvases) # T x batch x img_size
 
-out_file=os.path.join(FLAGS.data_dir,"draw_data.npy")
+out_file=os.path.join(FLAGS.data_dir,"draw_data_100_glimpses_mnist.npy")
 np.save(out_file,[canvases,Lxs,Lzs])
 print("Outputs saved in file: %s" % out_file)
 
-ckpt_file=os.path.join(FLAGS.data_dir,"drawmodel.ckpt")
+ckpt_file=os.path.join(FLAGS.data_dir,"drawmodel_100_glimpses_mnist.ckpt")
 print("Model saved in file: %s" % saver.save(sess,ckpt_file))
 
 sess.close()
