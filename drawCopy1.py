@@ -239,16 +239,16 @@ for i in range(train_iters):
 canvases=sess.run(cs,feed_dict) # generate some examples
 canvases=np.array(canvases) # T x batch x img_size
 
-model_name = "zero_or_one_blob"
+model_directory = "model_runs/zero_or_one_50_blob"
 
-if not os.path.exists(model_name):
-	os.makedirs(model_name)
+if not os.path.exists(model_directory):
+	os.makedirs(model_directory)
 
-out_file=os.path.join(FLAGS.data_dir, model_name + "/draw_data.npy")
+out_file=os.path.join(FLAGS.data_dir, model_directory + "/draw_data.npy")
 np.save(out_file,[canvases,Lxs,Lzs])
 print("Outputs saved in file: %s" % out_file)
 
-ckpt_file=os.path.join(FLAGS.data_dir, model_name + "/drawmodel.ckpt")
+ckpt_file=os.path.join(FLAGS.data_dir, model_directory + "/drawmodel.ckpt")
 print("Model saved in file: %s" % saver.save(sess,ckpt_file))
 
 sess.close()
