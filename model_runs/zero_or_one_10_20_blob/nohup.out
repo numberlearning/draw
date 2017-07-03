@@ -1,0 +1,35 @@
+2017-07-03 14:04:00.870383: W tensorflow/core/platform/cpu_feature_guard.cc:45] The TensorFlow library wasn't compiled to use SSE4.1 instructions, but these are available on your machine and could speed up CPU computations.
+2017-07-03 14:04:00.870422: W tensorflow/core/platform/cpu_feature_guard.cc:45] The TensorFlow library wasn't compiled to use SSE4.2 instructions, but these are available on your machine and could speed up CPU computations.
+2017-07-03 14:04:00.870428: W tensorflow/core/platform/cpu_feature_guard.cc:45] The TensorFlow library wasn't compiled to use AVX instructions, but these are available on your machine and could speed up CPU computations.
+2017-07-03 14:04:00.870431: W tensorflow/core/platform/cpu_feature_guard.cc:45] The TensorFlow library wasn't compiled to use AVX2 instructions, but these are available on your machine and could speed up CPU computations.
+2017-07-03 14:04:00.870434: W tensorflow/core/platform/cpu_feature_guard.cc:45] The TensorFlow library wasn't compiled to use FMA instructions, but these are available on your machine and could speed up CPU computations.
+2017-07-03 14:04:01.011950: I tensorflow/stream_executor/cuda/cuda_gpu_executor.cc:901] successful NUMA node read from SysFS had negative value (-1), but there must be at least one NUMA node, so returning NUMA node zero
+2017-07-03 14:04:01.012207: I tensorflow/core/common_runtime/gpu/gpu_device.cc:887] Found device 0 with properties: 
+name: GeForce GTX 1080
+major: 6 minor: 1 memoryClockRate (GHz) 1.898
+pciBusID 0000:01:00.0
+Total memory: 7.92GiB
+Free memory: 4.22GiB
+2017-07-03 14:04:01.012248: W tensorflow/stream_executor/cuda/cuda_driver.cc:485] creating context when one is currently active; existing: 0x1414e710
+2017-07-03 14:04:01.098171: I tensorflow/stream_executor/cuda/cuda_gpu_executor.cc:901] successful NUMA node read from SysFS had negative value (-1), but there must be at least one NUMA node, so returning NUMA node zero
+2017-07-03 14:04:01.098452: I tensorflow/core/common_runtime/gpu/gpu_device.cc:887] Found device 1 with properties: 
+name: GeForce GTX 1080
+major: 6 minor: 1 memoryClockRate (GHz) 1.898
+pciBusID 0000:02:00.0
+Total memory: 7.92GiB
+Free memory: 7.48GiB
+2017-07-03 14:04:01.098573: I tensorflow/core/common_runtime/gpu/gpu_device.cc:908] DMA: 0 1 
+2017-07-03 14:04:01.098579: I tensorflow/core/common_runtime/gpu/gpu_device.cc:918] 0:   Y Y 
+2017-07-03 14:04:01.098582: I tensorflow/core/common_runtime/gpu/gpu_device.cc:918] 1:   Y Y 
+2017-07-03 14:04:01.098587: I tensorflow/core/common_runtime/gpu/gpu_device.cc:977] Creating TensorFlow device (/gpu:0) -> (device: 0, name: GeForce GTX 1080, pci bus id: 0000:01:00.0)
+2017-07-03 14:04:01.098591: I tensorflow/core/common_runtime/gpu/gpu_device.cc:977] Creating TensorFlow device (/gpu:1) -> (device: 1, name: GeForce GTX 1080, pci bus id: 0000:02:00.0)
+iter=10000 : Lx: -346678.843750 Lz: -1199.999756
+Outputs saved in file: model_runs/zero_or_one_10_20_blob/draw_data_10000.npy
+Model saved in file: model_runs/zero_or_one_10_20_blob/drawmodel_10000.ckpt
+iter=11000 : Lx: -316898.156250 Lz: -1199.999756
+iter=12000 : Lx: -348839.562500 Lz: -1199.999756
+iter=13000 : Lx: -341605.781250 Lz: -1200.000000
+iter=14000 : Lx: -283124.750000 Lz: -1200.000000
+iter=15000 : Lx: -349732.062500 Lz: -1200.000000
+iter=16000 : Lx: -489663.781250 Lz: -1200.000000
+iter=17000 : Lx: -337472.218750 Lz: -1200.000000

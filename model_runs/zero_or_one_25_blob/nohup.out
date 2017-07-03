@@ -1,0 +1,127 @@
+2017-07-02 10:21:21.132492: W tensorflow/core/platform/cpu_feature_guard.cc:45] The TensorFlow library wasn't compiled to use SSE4.1 instructions, but these are available on your machine and could speed up CPU computations.
+2017-07-02 10:21:21.132529: W tensorflow/core/platform/cpu_feature_guard.cc:45] The TensorFlow library wasn't compiled to use SSE4.2 instructions, but these are available on your machine and could speed up CPU computations.
+2017-07-02 10:21:21.132534: W tensorflow/core/platform/cpu_feature_guard.cc:45] The TensorFlow library wasn't compiled to use AVX instructions, but these are available on your machine and could speed up CPU computations.
+2017-07-02 10:21:21.132536: W tensorflow/core/platform/cpu_feature_guard.cc:45] The TensorFlow library wasn't compiled to use AVX2 instructions, but these are available on your machine and could speed up CPU computations.
+2017-07-02 10:21:21.132540: W tensorflow/core/platform/cpu_feature_guard.cc:45] The TensorFlow library wasn't compiled to use FMA instructions, but these are available on your machine and could speed up CPU computations.
+2017-07-02 10:21:21.279168: I tensorflow/stream_executor/cuda/cuda_gpu_executor.cc:901] successful NUMA node read from SysFS had negative value (-1), but there must be at least one NUMA node, so returning NUMA node zero
+2017-07-02 10:21:21.279426: I tensorflow/core/common_runtime/gpu/gpu_device.cc:887] Found device 0 with properties: 
+name: GeForce GTX 1080
+major: 6 minor: 1 memoryClockRate (GHz) 1.898
+pciBusID 0000:01:00.0
+Total memory: 7.92GiB
+Free memory: 4.23GiB
+2017-07-02 10:21:21.279469: W tensorflow/stream_executor/cuda/cuda_driver.cc:485] creating context when one is currently active; existing: 0x12fa8820
+2017-07-02 10:21:21.365676: I tensorflow/stream_executor/cuda/cuda_gpu_executor.cc:901] successful NUMA node read from SysFS had negative value (-1), but there must be at least one NUMA node, so returning NUMA node zero
+2017-07-02 10:21:21.365961: I tensorflow/core/common_runtime/gpu/gpu_device.cc:887] Found device 1 with properties: 
+name: GeForce GTX 1080
+major: 6 minor: 1 memoryClockRate (GHz) 1.898
+pciBusID 0000:02:00.0
+Total memory: 7.92GiB
+Free memory: 7.48GiB
+2017-07-02 10:21:21.366085: I tensorflow/core/common_runtime/gpu/gpu_device.cc:908] DMA: 0 1 
+2017-07-02 10:21:21.366091: I tensorflow/core/common_runtime/gpu/gpu_device.cc:918] 0:   Y Y 
+2017-07-02 10:21:21.366094: I tensorflow/core/common_runtime/gpu/gpu_device.cc:918] 1:   Y Y 
+2017-07-02 10:21:21.366099: I tensorflow/core/common_runtime/gpu/gpu_device.cc:977] Creating TensorFlow device (/gpu:0) -> (device: 0, name: GeForce GTX 1080, pci bus id: 0000:01:00.0)
+2017-07-02 10:21:21.366102: I tensorflow/core/common_runtime/gpu/gpu_device.cc:977] Creating TensorFlow device (/gpu:1) -> (device: 1, name: GeForce GTX 1080, pci bus id: 0000:02:00.0)
+iter=0 : Lx: 6732.524414 Lz: -1146.215332
+iter=100 : Lx: -1152754.750000 Lz: -1127.176758
+iter=200 : Lx: -194437.390625 Lz: -957.838806
+iter=300 : Lx: -1050343.750000 Lz: -1093.761475
+iter=400 : Lx: -1318797.625000 Lz: -1149.336792
+iter=500 : Lx: -1403305.250000 Lz: -1185.409668
+iter=600 : Lx: -1212884.750000 Lz: -1192.811035
+iter=700 : Lx: -984815.250000 Lz: -1199.229248
+iter=800 : Lx: 293925.125000 Lz: -1199.770874
+iter=900 : Lx: -349992.687500 Lz: -1199.928589
+iter=1000 : Lx: -126181.437500 Lz: -1199.960083
+iter=1100 : Lx: -359203.031250 Lz: -1199.909058
+iter=1200 : Lx: -382919.687500 Lz: -1199.902954
+iter=1300 : Lx: -549972.187500 Lz: -1199.980957
+iter=1400 : Lx: -535235.625000 Lz: -1199.968506
+iter=1500 : Lx: -667288.875000 Lz: -1199.979614
+iter=1600 : Lx: -896626.375000 Lz: -1199.977661
+iter=1700 : Lx: -239814.078125 Lz: -1199.982178
+iter=1800 : Lx: -1236027.250000 Lz: -1199.976074
+iter=1900 : Lx: -1325943.250000 Lz: -1199.979736
+iter=2000 : Lx: -988384.312500 Lz: -1199.817627
+iter=2100 : Lx: -1283690.750000 Lz: -1199.981201
+iter=2200 : Lx: -1401122.500000 Lz: -1199.981812
+iter=2300 : Lx: -1019469.125000 Lz: -1199.978271
+iter=2400 : Lx: -1136901.000000 Lz: -1199.908447
+iter=2500 : Lx: -1136901.000000 Lz: -1199.940552
+iter=2600 : Lx: -1342406.625000 Lz: -1199.946289
+iter=2700 : Lx: -1283690.750000 Lz: -1199.951660
+iter=2800 : Lx: -1136901.000000 Lz: -1199.955200
+iter=2900 : Lx: -1401122.500000 Lz: -1199.983643
+iter=3000 : Lx: -1166258.875000 Lz: -1199.982422
+iter=3100 : Lx: -1283690.750000 Lz: -1199.984253
+iter=3200 : Lx: -1166258.875000 Lz: -1199.985229
+iter=3300 : Lx: -1107543.125000 Lz: -1199.986816
+iter=3400 : Lx: -1195616.875000 Lz: -1199.986816
+iter=3500 : Lx: -1195616.875000 Lz: -1199.985840
+iter=3600 : Lx: -1518554.250000 Lz: -1199.989868
+iter=3700 : Lx: -1313048.750000 Lz: -1199.985229
+iter=3800 : Lx: -1430480.500000 Lz: -1199.986084
+iter=3900 : Lx: -1136900.875000 Lz: -1199.987061
+iter=4000 : Lx: -1313048.750000 Lz: -1199.988037
+iter=4100 : Lx: -1224974.875000 Lz: -1199.986084
+iter=4200 : Lx: -1283690.750000 Lz: -1199.986694
+iter=4300 : Lx: -1166259.000000 Lz: -1199.988403
+iter=4400 : Lx: -1371764.625000 Lz: -1199.987671
+iter=4500 : Lx: -1195616.875000 Lz: -1199.985474
+iter=4600 : Lx: -1195617.000000 Lz: -1199.986572
+iter=4700 : Lx: -1283690.750000 Lz: -1199.987061
+iter=4800 : Lx: -1166259.000000 Lz: -1199.989746
+iter=4900 : Lx: -1547912.250000 Lz: -1199.985596
+iter=5000 : Lx: -1401122.625000 Lz: -1199.987549
+iter=5100 : Lx: -1401122.500000 Lz: -1199.986206
+iter=5200 : Lx: -1283690.750000 Lz: -1199.985596
+iter=5300 : Lx: -1224974.875000 Lz: -1199.986084
+iter=5400 : Lx: -1166259.000000 Lz: -1199.987061
+iter=5500 : Lx: -1430480.500000 Lz: -1199.988525
+iter=5600 : Lx: -1430480.500000 Lz: -1199.987305
+iter=5700 : Lx: -1459838.375000 Lz: -1199.986328
+iter=5800 : Lx: -1019469.125000 Lz: -1199.989014
+iter=5900 : Lx: -1078185.125000 Lz: -1199.989014
+iter=6000 : Lx: -931395.375000 Lz: -1199.986572
+iter=6100 : Lx: -1313048.750000 Lz: -1199.987427
+iter=6200 : Lx: -1430480.625000 Lz: -1199.985962
+iter=6300 : Lx: -1283690.750000 Lz: -1199.990479
+iter=6400 : Lx: -1342406.500000 Lz: -1199.985840
+iter=6500 : Lx: -1313048.500000 Lz: -1199.988770
+iter=6600 : Lx: -1547912.250000 Lz: -1199.986694
+iter=6700 : Lx: -1136901.000000 Lz: -1199.987061
+iter=6800 : Lx: -1107543.000000 Lz: -1199.986206
+iter=6900 : Lx: -1224974.875000 Lz: -1199.987427
+iter=7000 : Lx: -1313048.750000 Lz: -1199.989746
+iter=7100 : Lx: -990111.250000 Lz: -1199.988159
+iter=7200 : Lx: -1459838.500000 Lz: -1199.988892
+iter=7300 : Lx: -1489196.500000 Lz: -1199.986572
+iter=7400 : Lx: -1371764.625000 Lz: -1199.986572
+iter=7500 : Lx: -1283690.750000 Lz: -1199.987305
+iter=7600 : Lx: -1254332.875000 Lz: -1199.989014
+iter=7700 : Lx: -1224974.875000 Lz: -1199.988281
+iter=7800 : Lx: -1224974.875000 Lz: -1199.986816
+iter=7900 : Lx: -1342406.625000 Lz: -1199.985840
+iter=8000 : Lx: -1342406.750000 Lz: -1199.986938
+iter=8100 : Lx: -1313048.750000 Lz: -1199.986450
+iter=8200 : Lx: -1430480.500000 Lz: -1199.986694
+iter=8300 : Lx: -1489196.500000 Lz: -1199.986206
+iter=8400 : Lx: -1136901.000000 Lz: -1199.987427
+iter=8500 : Lx: -1224974.875000 Lz: -1199.990479
+iter=8600 : Lx: -1254332.875000 Lz: -1199.987427
+iter=8700 : Lx: -1371764.500000 Lz: -1199.986084
+iter=8800 : Lx: -1430480.625000 Lz: -1199.988281
+iter=8900 : Lx: -1195617.000000 Lz: -1199.986938
+iter=9000 : Lx: -1283690.750000 Lz: -1199.986694
+iter=9100 : Lx: -1048827.250000 Lz: -1199.986328
+iter=9200 : Lx: -1313048.625000 Lz: -1199.986206
+iter=9300 : Lx: -1401122.750000 Lz: -1199.988770
+iter=9400 : Lx: -1107543.000000 Lz: -1199.987671
+iter=9500 : Lx: -1166259.000000 Lz: -1199.987549
+iter=9600 : Lx: -1254332.750000 Lz: -1199.986938
+iter=9700 : Lx: -1313048.750000 Lz: -1199.989502
+iter=9800 : Lx: -1195617.000000 Lz: -1199.986816
+iter=9900 : Lx: -1283690.750000 Lz: -1199.987305
+Outputs saved in file: model_runs/zero_or_one_25_blob/draw_data.npy
+Model saved in file: model_runs/zero_or_one_25_blob/drawmodel.ckpt

@@ -33,7 +33,7 @@ write_size = write_n*write_n if FLAGS.write_attn else img_size
 z_size=2 # QSampler output size
 T=50 # MNIST generation sequence length
 batch_size=100 # training minibatch size
-train_iters=10000
+train_iters=10000000
 learning_rate=1e-3 # learning rate for optimizer
 eps=1e-8 # epsilon for numerical stability
 
@@ -224,31 +224,33 @@ sess=tf.InteractiveSession()
 
 saver = tf.train.Saver() # saves variables learned during training
 tf.global_variables_initializer().run()
-#saver.restore(sess, "/tmp/draw/drawmodel.ckpt") # to restore from model, uncomment this line
 
-for i in range(train_iters):
-	xtrain,_=train_data.next_batch(batch_size) # xtrain is (batch_size x img_size)
-	feed_dict={x:xtrain}
-	results=sess.run(fetches,feed_dict)
-	Lxs[i],Lzs[i],_=results
-	if i%100==0:
-               	print("iter=%d : Lx: %f Lz: %f" % (i,Lxs[i],Lzs[i]))
-
-## TRAINING FINISHED ## 
-
-canvases=sess.run(cs,feed_dict) # generate some examples
-canvases=np.array(canvases) # T x batch x img_size
-
-model_directory = "model_runs/zero_or_one_50_blob"
+model_directory = "model_runs/zero_or_one_2_5_blob"
 
 if not os.path.exists(model_directory):
 	os.makedirs(model_directory)
 
-out_file=os.path.join(FLAGS.data_dir, model_directory + "/draw_data.npy")
-np.save(out_file,[canvases,Lxs,Lzs])
-print("Outputs saved in file: %s" % out_file)
+start_ckpt = 10000 
+saver.restore(sess, model_directory + "/drawmodel.ckpt") # to restore from model, uncomment this line
+#saver.restore(sess, model_directory + "/drawmodel_" + str(start_ckpt) + ".ckpt") # to restore from model, uncomment this line, may need to change filename!!!
 
-ckpt_file=os.path.join(FLAGS.data_dir, model_directory + "/drawmodel.ckpt")
-print("Model saved in file: %s" % saver.save(sess,ckpt_file))
+for i in range(start_ckpt, train_iters):
+	xtrain,_=train_data.next_batch(batch_size) # xtrain is (batch_size x img_size)
+	feed_dict={x:xtrain}
+	results=sess.run(fetches,feed_dict)
+	Lxs[i],Lzs[i],_=results
+	if i%1000==0:
+               	print("iter=%d : Lx: %f Lz: %f" % (i,Lxs[i],Lzs[i]))
+                if i%10000==0:
+                    ## SAVE TRAINING CHECKPOINT ## 
+                    canvases=sess.run(cs,feed_dict) # generate some examples
+                    canvases=np.array(canvases) # T x batch x img_size
+
+                    out_file=os.path.join(FLAGS.data_dir, model_directory + "/draw_data_" + str(i) + ".npy")
+                    np.save(out_file,[canvases,Lxs,Lzs])
+                    print("Outputs saved in file: %s" % out_file)
+
+                    ckpt_file=os.path.join(FLAGS.data_dir, model_directory + "/drawmodel_" + str(i) + ".ckpt")
+                    print("Model saved in file: %s" % saver.save(sess,ckpt_file))
 
 sess.close()

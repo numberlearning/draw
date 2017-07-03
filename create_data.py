@@ -1,8 +1,8 @@
 import sys
 import numpy as np
 import random
-min_edge = 50
-max_edge = 50
+min_edge = 25
+max_edge = 25
 min_blobs = 0
 max_blobs = 1
 n_labels = max_blobs - min_blobs + 1
