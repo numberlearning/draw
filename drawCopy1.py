@@ -53,6 +53,7 @@ def linear(x,output_dim):
     """
     w=tf.get_variable("w", [x.get_shape()[1], output_dim]) 
     b=tf.get_variable("b", [output_dim], initializer=tf.constant_initializer(0.0))
+    #b=tf.get_variable("b", [output_dim], initializer=tf.random_normal_initializer())
     return tf.matmul(x,w)+b
 
 def filterbank(gx, gy, sigma2,delta, N):
@@ -225,7 +226,8 @@ sess=tf.InteractiveSession()
 saver = tf.train.Saver() # saves variables learned during training
 tf.global_variables_initializer().run()
 
-model_directory = "model_runs/zero_or_one_2_5_blob"
+## CHANGE THE MODEL SETTINGS HERE #########################
+model_directory = "model_runs/zero_or_one_20_25_blob"
 
 if not os.path.exists(model_directory):
 	os.makedirs(model_directory)

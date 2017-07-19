@@ -1,7 +1,7 @@
 import sys
 import numpy as np
 import random
-min_edge = 25
+min_edge = 20
 max_edge = 25
 min_blobs = 0
 max_blobs = 1
