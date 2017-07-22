@@ -13,7 +13,6 @@ import tensorflow as tf
 from tensorflow.examples.tutorials import mnist
 import numpy as np
 import os
-import load_input
 
 tf.flags.DEFINE_string("data_dir", "", "")
 tf.flags.DEFINE_boolean("read_attn", True, "enable attention for reader")
@@ -22,7 +21,7 @@ FLAGS = tf.flags.FLAGS
 
 ## MODEL PARAMETERS ## 
 
-A,B = 28, 28#100,100 # image width,height
+A,B = 28,28 # image width,height
 img_size = B*A # the canvas size
 enc_size = 256 # number of hidden units / output size in LSTM
 dec_size = 256
@@ -30,10 +29,10 @@ read_n = 5 # read glimpse grid width/height
 write_n = 5 # write glimpse grid width/height
 read_size = 2*read_n*read_n if FLAGS.read_attn else 2*img_size
 write_size = write_n*write_n if FLAGS.write_attn else img_size
-z_size=10#2 # QSampler output size
-T=20 # MNIST generation sequence length
-batch_size=1#100 # training minibatch size
-train_iters=100000
+z_size=10 # QSampler output size
+T=10 # MNIST generation sequence length
+batch_size=100 # training minibatch size
+train_iters=10000
 learning_rate=1e-3 # learning rate for optimizer
 eps=1e-8 # epsilon for numerical stability
 
@@ -53,7 +52,6 @@ def linear(x,output_dim):
     """
     w=tf.get_variable("w", [x.get_shape()[1], output_dim]) 
     b=tf.get_variable("b", [output_dim], initializer=tf.constant_initializer(0.0))
-    #b=tf.get_variable("b", [output_dim], initializer=tf.random_normal_initializer())
     return tf.matmul(x,w)+b
 
 def filterbank(gx, gy, sigma2,delta, N):
@@ -72,7 +70,6 @@ def filterbank(gx, gy, sigma2,delta, N):
     Fy=Fy/tf.maximum(tf.reduce_sum(Fy,2,keep_dims=True),eps)
     return Fx,Fy
 
-
 def attn_window(scope,h_dec,N):
     with tf.variable_scope(scope,reuse=DO_SHARE):
         params=linear(h_dec,5)
@@ -90,8 +87,6 @@ def read_no_attn(x,x_hat,h_dec_prev):
 
 def read_attn(x,x_hat,h_dec_prev):
     Fx,Fy,gamma=attn_window("read",h_dec_prev,read_n)
-    stats = Fx, Fy, gamma
-
     def filter_img(img,Fx,Fy,gamma,N):
         Fxt=tf.transpose(Fx,perm=[0,2,1])
         img=tf.reshape(img,[-1,B,A])
@@ -100,8 +95,7 @@ def read_attn(x,x_hat,h_dec_prev):
         return glimpse*tf.reshape(gamma,[-1,1])
     x=filter_img(x,Fx,Fy,gamma,read_n) # batch x (read_n*read_n)
     x_hat=filter_img(x_hat,Fx,Fy,gamma,read_n)
-    return tf.concat([x,x_hat], 1), stats # concat along feature axis
-    #return x, stats
+    return tf.concat([x,x_hat], 1) # concat along feature axis
 
 read = read_attn if FLAGS.read_attn else read_no_attn
 
@@ -146,14 +140,11 @@ def write_attn(h_dec):
     N=write_n
     w=tf.reshape(w,[batch_size,N,N])
     Fx,Fy,gamma=attn_window("write",h_dec,write_n)
-
-    stats = Fx, Fy, gamma
-
     Fyt=tf.transpose(Fy,perm=[0,2,1])
     wr=tf.matmul(Fyt,tf.matmul(w,Fx))
     wr=tf.reshape(wr,[batch_size,B*A])
     #gamma=tf.tile(gamma,[1,B*A])
-    return wr*tf.reshape(1.0/gamma,[-1,1]), stats
+    return wr*tf.reshape(1.0/gamma,[-1,1])
 
 write=write_attn if FLAGS.write_attn else write_no_attn
 
@@ -168,31 +159,17 @@ dec_state=lstm_dec.zero_state(batch_size, tf.float32)
 
 ## DRAW MODEL ## 
 
-viz_data = list()
-
 # construct the unrolled computational graph
 for t in range(T):
     c_prev = tf.zeros((batch_size,img_size)) if t==0 else cs[t-1]
     x_hat=x-tf.sigmoid(c_prev) # error image
-    r, stats=read(x,x_hat,h_dec_prev)
+    r=read(x,x_hat,h_dec_prev)
     h_enc,enc_state=encode(enc_state,tf.concat([r,h_dec_prev], 1))
     z,mus[t],logsigmas[t],sigmas[t]=sampleQ(h_enc)
     h_dec,dec_state=decode(dec_state,z)
-
-    write_output = write(h_dec)
-    write_img, w_stats = write_output
-    cs[t]=c_prev+write_img # store results
-
+    cs[t]=c_prev+write(h_dec) # store results
     h_dec_prev=h_dec
     DO_SHARE=True # from now on, share variables
-
-    viz_data.append({
-        #"stats": stats,
-        "r": r[0, :read_n*read_n],
-        "h_dec": h_dec,
-        "c": cs[t],
-        "stats": w_stats,
-    })
 
 ## LOSS FUNCTION ## 
 
@@ -211,7 +188,7 @@ for t in range(T):
     mu2=tf.square(mus[t])
     sigma2=tf.square(sigmas[t])
     logsigma=logsigmas[t]
-    kl_terms[t]=0.5*tf.reduce_sum(mu2+sigma2-2*logsigma,1)-T*.5 # each kl term is (1xminibatch)
+    kl_terms[t]=0.5*tf.reduce_sum(mu2+sigma2-2*logsigma,1)-.5 # each kl term is (1xminibatch)
 KL=tf.add_n(kl_terms) # this is 1xminibatch, corresponding to summing kl_terms from 1:T
 Lz=tf.reduce_mean(KL) # average over minibatches
 
@@ -230,52 +207,38 @@ train_op=optimizer.apply_gradients(grads)
 
 data_directory = os.path.join(FLAGS.data_dir, "mnist")
 if not os.path.exists(data_directory):
-    os.makedirs(data_directory)
+	os.makedirs(data_directory)
 train_data = mnist.input_data.read_data_sets(data_directory, one_hot=True).train # binarized (0-1) mnist data
-
-#train_data = load_input.InputData()
-#train_data.get_train(1)
 
 fetches=[]
 fetches.extend([Lx,Lz,train_op])
 Lxs=[0]*train_iters
 Lzs=[0]*train_iters
 
-if __name__ == '__main__':
-    sess_config = tf.ConfigProto()
-    sess_config.gpu_options.allow_growth = True
-    sess=tf.InteractiveSession()
+sess=tf.InteractiveSession()
 
-    saver = tf.train.Saver() # saves variables learned during training
-    tf.global_variables_initializer().run()
+saver = tf.train.Saver() # saves variables learned during training
+tf.global_variables_initializer().run()
+#saver.restore(sess, "/tmp/draw/drawmodel.ckpt") # to restore from model, uncomment this line
 
-    ## CHANGE THE MODEL SETTINGS HERE #########################
-    model_directory = "model_runs/mnist"
+for i in range(train_iters):
+	xtrain,_=train_data.next_batch(batch_size) # xtrain is (batch_size x img_size)
+	feed_dict={x:xtrain}
+	results=sess.run(fetches,feed_dict)
+	Lxs[i],Lzs[i],_=results
+	if i%100==0:
+		print("iter=%d : Lx: %f Lz: %f" % (i,Lxs[i],Lzs[i]))
 
-    if not os.path.exists(model_directory):
-        os.makedirs(model_directory)
+## TRAINING FINISHED ## 
 
-    start_ckpt = 0 
-    #saver.restore(sess, model_directory + "/drawmodel.ckpt") # to restore from model, uncomment this line
-    #saver.restore(sess, model_directory + "/drawmodel_" + str(start_ckpt) + ".ckpt") # to restore from model, uncomment this line, may need to change filename!!!
+canvases=sess.run(cs,feed_dict) # generate some examples
+canvases=np.array(canvases) # T x batch x img_size
 
-    for i in range(start_ckpt, train_iters):
-        xtrain,_=train_data.next_batch(batch_size) # xtrain is (batch_size x img_size)
-        feed_dict={x:xtrain}
-        results=sess.run(fetches,feed_dict)
-        Lxs[i],Lzs[i],_=results
-        if i%100==0:
-            print("iter=%d : Lx: %f Lz: %f" % (i,Lxs[i],Lzs[i]))
-            if i%1000==0:
-                ## SAVE TRAINING CHECKPOINT ## 
-                canvases=sess.run(cs,feed_dict) # generate some examples
-                canvases=np.array(canvases) # T x batch x img_size
+out_file=os.path.join(FLAGS.data_dir,"draw_data.npy")
+np.save(out_file,[canvases,Lxs,Lzs])
+print("Outputs saved in file: %s" % out_file)
 
-                out_file=os.path.join(FLAGS.data_dir, model_directory + "/draw_data_" + str(i) + ".npy")
-                np.save(out_file,[canvases,Lxs,Lzs])
-                print("Outputs saved in file: %s" % out_file)
+ckpt_file=os.path.join(FLAGS.data_dir,"drawmodel.ckpt")
+print("Model saved in file: %s" % saver.save(sess,ckpt_file))
 
-                ckpt_file=os.path.join(FLAGS.data_dir, model_directory + "/drawmodel_" + str(i) + ".ckpt")
-                print("Model saved in file: %s" % saver.save(sess,ckpt_file))
-
-    sess.close()
+sess.close()
