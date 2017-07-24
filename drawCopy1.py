@@ -26,16 +26,16 @@ A,B = 28, 28#100,100 # image width,height
 img_size = B*A # the canvas size
 enc_size = 256 # number of hidden units / output size in LSTM
 dec_size = 256
-read_n = 5 # read glimpse grid width/height
-write_n = 5 # write glimpse grid width/height
+read_n = 12 # read glimpse grid width/height
+write_n = 12 # write glimpse grid width/height
 read_size = 2*read_n*read_n if FLAGS.read_attn else 2*img_size
 write_size = write_n*write_n if FLAGS.write_attn else img_size
-z_size=10#2 # QSampler output size
-T=20 # MNIST generation sequence length
-batch_size=1#100 # training minibatch size
-train_iters=100000
-learning_rate=1e-3 # learning rate for optimizer
-eps=1e-8 # epsilon for numerical stability
+z_size = 10#2 # QSampler output size
+T = 100 # MNIST generation sequence length
+batch_size = 100#100 # training minibatch size
+train_iters = 500000
+learning_rate = 1e-3 # learning rate for optimizer
+eps = 1e-8 # epsilon for numerical stability
 
 ## BUILD MODEL ## 
 
@@ -82,15 +82,18 @@ def attn_window(scope,h_dec,N):
     gy=(B+1)/2*(gy_+1)
     sigma2=tf.exp(log_sigma2)
     delta=(max(A,B)-1)/(N-1)*tf.exp(log_delta) # batch x N
-    return filterbank(gx,gy,sigma2,delta,N)+(tf.exp(log_gamma),)
+    Fx, Fy = filterbank(gx,gy,sigma2,delta,N) 
+    gamma = tf.exp(log_gamma)
+    return Fx, Fy, gamma, gx, gy, delta
 
 ## READ ## 
 def read_no_attn(x,x_hat,h_dec_prev):
     return tf.concat([x,x_hat], 1)
 
 def read_attn(x,x_hat,h_dec_prev):
-    Fx,Fy,gamma=attn_window("read",h_dec_prev,read_n)
+    Fx,Fy,gamma, gx, gy, delta=attn_window("read",h_dec_prev,read_n)
     stats = Fx, Fy, gamma
+    new_stats = gx, gy, delta 
 
     def filter_img(img,Fx,Fy,gamma,N):
         Fxt=tf.transpose(Fx,perm=[0,2,1])
@@ -100,7 +103,7 @@ def read_attn(x,x_hat,h_dec_prev):
         return glimpse*tf.reshape(gamma,[-1,1])
     x=filter_img(x,Fx,Fy,gamma,read_n) # batch x (read_n*read_n)
     x_hat=filter_img(x_hat,Fx,Fy,gamma,read_n)
-    return tf.concat([x,x_hat], 1), stats # concat along feature axis
+    return tf.concat([x,x_hat], 1), new_stats # concat along feature axis
     #return x, stats
 
 read = read_attn if FLAGS.read_attn else read_no_attn
@@ -145,15 +148,16 @@ def write_attn(h_dec):
         w=linear(h_dec,write_size) # batch x (write_n*write_n)
     N=write_n
     w=tf.reshape(w,[batch_size,N,N])
-    Fx,Fy,gamma=attn_window("write",h_dec,write_n)
+    Fx,Fy,gamma, gx, gy, delta=attn_window("write",h_dec,write_n)
 
     stats = Fx, Fy, gamma
+    new_stats = gx, gy,delta 
 
     Fyt=tf.transpose(Fy,perm=[0,2,1])
     wr=tf.matmul(Fyt,tf.matmul(w,Fx))
     wr=tf.reshape(wr,[batch_size,B*A])
     #gamma=tf.tile(gamma,[1,B*A])
-    return wr*tf.reshape(1.0/gamma,[-1,1]), stats
+    return wr*tf.reshape(1.0/gamma,[-1,1]), new_stats
 
 write=write_attn if FLAGS.write_attn else write_no_attn
 
@@ -250,7 +254,7 @@ if __name__ == '__main__':
     tf.global_variables_initializer().run()
 
     ## CHANGE THE MODEL SETTINGS HERE #########################
-    model_directory = "model_runs/mnist"
+    model_directory = "model_runs/mnist100glimpses"
 
     if not os.path.exists(model_directory):
         os.makedirs(model_directory)
@@ -264,9 +268,9 @@ if __name__ == '__main__':
         feed_dict={x:xtrain}
         results=sess.run(fetches,feed_dict)
         Lxs[i],Lzs[i],_=results
-        if i%100==0:
+        if i%1000==0:
             print("iter=%d : Lx: %f Lz: %f" % (i,Lxs[i],Lzs[i]))
-            if i%1000==0:
+            if i%10000==0:
                 ## SAVE TRAINING CHECKPOINT ## 
                 canvases=sess.run(cs,feed_dict) # generate some examples
                 canvases=np.array(canvases) # T x batch x img_size

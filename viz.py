@@ -53,7 +53,7 @@ def make_figure(color, i):
     im = np.zeros((w, w))
     i_source = ColumnDataSource(data=dict(image=[im]))
 
-    iii = p.image(image=[im], x=0, y=w, dw=w, dh=w, palette="Spectral9")#"Greys256")
+    iii = p.image(image=[im], x=0, y=w, dw=w, dh=w, palette="Greys256")#"Spectral9")#"Greys256")
     source = ColumnDataSource(data=dict(top=[0], bottom=[0], left=[0], right=[0]))
     q = p.quad('left', 'right', 'top', 'bottom', source=source, color=color, fill_alpha=0, line_width=3)
     

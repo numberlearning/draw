@@ -90,38 +90,63 @@ def write_img(it, new_image):
 
 
 def stats_to_rect(stats):
-    Fx, Fy, gamma = stats
+    """Draw attention window based on gx, gy, and delta."""
 
-    def min_max(ar):
-        minI = None
-        maxI = None
-        for i in range(A):
-            if np.any(ar[0, :, i]):
-                minI = i
-                break
+    gx, gy, delta = stats
+    minY = A - gy + read_n/2.0 * delta
+    maxY = A - gy - read_n/2.0 * delta
 
-        for i in reversed(range(A)):
-            if np.any(ar[0, :, i]):
-                maxI = i
-                break
+    minX = gx - read_n/2.0 * delta
+    maxX = gx + read_n/2.0 * delta
 
-        return minI, maxI
+    if minX < 1:
+        minX = 1
 
-    minX, maxX = min_max(Fx)
-    minY, maxY = min_max(Fy)
+    if maxY < 1:
+        maxY = 1
 
-    return dict(top=[minY], bottom=[maxY], left=[minX], right=[maxX])
-    # if minX < 1:
-    #     minX = 1
+    if maxX > A - 1:
+        maxX = A - 1
 
-    # if minY < 1:
-    #     minY = 1
+    if minY > B - 1:
+        minY = B - 1
 
-    # if maxX > A - 1:
-    #     maxX = A - 1
+    return dict(top=[int(minY)], bottom=[int(maxY)], left=[int(minX)], right=[int(maxX)])
 
-    # if maxY > B - 1:
-    #     maxY = B - 1
-
-    # return dict(top=[minY], bottom=[maxY], left=[minX], right=[maxX])
-
+# 
+# def stats_to_rect(stats):
+#     Fx, Fy, gamma = stats
+# 
+#     def min_max(ar):
+#         minI = None
+#         maxI = None
+#         for i in range(A):
+#             if np.any(ar[0, :, i]):
+#                 minI = i
+#                 break
+# 
+#         for i in reversed(range(A)):
+#             if np.any(ar[0, :, i]):
+#                 maxI = i
+#                 break
+# 
+#         return minI, maxI
+# 
+#     minX, maxX = min_max(Fx)
+#     minY, maxY = min_max(Fy)
+# 
+#     return dict(top=[minY], bottom=[maxY], left=[minX], right=[maxX])
+#     # if minX < 1:
+#     #     minX = 1
+# 
+#     # if minY < 1:
+#     #     minY = 1
+# 
+#     # if maxX > A - 1:
+#     #     maxX = A - 1
+# 
+#     # if maxY > B - 1:
+#     #     maxY = B - 1
+# 
+#     # return dict(top=[minY], bottom=[maxY], left=[minX], right=[maxX])
+# 
