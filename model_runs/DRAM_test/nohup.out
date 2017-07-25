@@ -1,0 +1,625 @@
+2017-07-24 18:04:22.142803: W tensorflow/core/platform/cpu_feature_guard.cc:45] The TensorFlow library wasn't compiled to use SSE4.1 instructions, but these are available on your machine and could speed up CPU computations.
+2017-07-24 18:04:22.142852: W tensorflow/core/platform/cpu_feature_guard.cc:45] The TensorFlow library wasn't compiled to use SSE4.2 instructions, but these are available on your machine and could speed up CPU computations.
+2017-07-24 18:04:22.142858: W tensorflow/core/platform/cpu_feature_guard.cc:45] The TensorFlow library wasn't compiled to use AVX instructions, but these are available on your machine and could speed up CPU computations.
+2017-07-24 18:04:22.142863: W tensorflow/core/platform/cpu_feature_guard.cc:45] The TensorFlow library wasn't compiled to use AVX2 instructions, but these are available on your machine and could speed up CPU computations.
+2017-07-24 18:04:22.142867: W tensorflow/core/platform/cpu_feature_guard.cc:45] The TensorFlow library wasn't compiled to use FMA instructions, but these are available on your machine and could speed up CPU computations.
+2017-07-24 18:04:22.301685: I tensorflow/stream_executor/cuda/cuda_gpu_executor.cc:901] successful NUMA node read from SysFS had negative value (-1), but there must be at least one NUMA node, so returning NUMA node zero
+2017-07-24 18:04:22.302059: I tensorflow/core/common_runtime/gpu/gpu_device.cc:887] Found device 0 with properties: 
+name: GeForce GTX 1080
+major: 6 minor: 1 memoryClockRate (GHz) 1.898
+pciBusID 0000:01:00.0
+Total memory: 7.92GiB
+Free memory: 6.14GiB
+2017-07-24 18:04:22.302114: W tensorflow/stream_executor/cuda/cuda_driver.cc:485] creating context when one is currently active; existing: 0x9fe3380
+2017-07-24 18:04:22.405772: I tensorflow/stream_executor/cuda/cuda_gpu_executor.cc:901] successful NUMA node read from SysFS had negative value (-1), but there must be at least one NUMA node, so returning NUMA node zero
+2017-07-24 18:04:22.406124: I tensorflow/core/common_runtime/gpu/gpu_device.cc:887] Found device 1 with properties: 
+name: GeForce GTX 1080
+major: 6 minor: 1 memoryClockRate (GHz) 1.898
+pciBusID 0000:02:00.0
+Total memory: 7.92GiB
+Free memory: 7.37GiB
+2017-07-24 18:04:22.406473: I tensorflow/core/common_runtime/gpu/gpu_device.cc:908] DMA: 0 1 
+2017-07-24 18:04:22.406484: I tensorflow/core/common_runtime/gpu/gpu_device.cc:918] 0:   Y Y 
+2017-07-24 18:04:22.406490: I tensorflow/core/common_runtime/gpu/gpu_device.cc:918] 1:   Y Y 
+2017-07-24 18:04:22.406503: I tensorflow/core/common_runtime/gpu/gpu_device.cc:977] Creating TensorFlow device (/gpu:0) -> (device: 0, name: GeForce GTX 1080, pci bus id: 0000:01:00.0)
+2017-07-24 18:04:22.406510: I tensorflow/core/common_runtime/gpu/gpu_device.cc:977] Creating TensorFlow device (/gpu:1) -> (device: 1, name: GeForce GTX 1080, pci bus id: 0000:02:00.0)
+iter=0 : Lx: 7063.202637 Lz: -90.784225
+Outputs saved in file: model_runs/DRAM_test/draw_data_0.npy
+Model saved in file: model_runs/DRAM_test/drawmodel_0.ckpt
+iter=1000 : Lx: -50656.867188 Lz: -99.987640
+iter=2000 : Lx: -402952.250000 Lz: -99.994431
+iter=3000 : Lx: -50656.812500 Lz: -99.999603
+iter=4000 : Lx: -520383.781250 Lz: -99.994995
+iter=5000 : Lx: -285520.312500 Lz: -99.999664
+iter=6000 : Lx: 66775.039062 Lz: -99.999451
+iter=7000 : Lx: -872679.500000 Lz: -99.987144
+iter=8000 : Lx: -520383.906250 Lz: -99.999947
+iter=9000 : Lx: -872679.250000 Lz: -99.989113
+iter=10000 : Lx: -50656.898438 Lz: -99.999992
+Outputs saved in file: model_runs/DRAM_test/draw_data_10000.npy
+Model saved in file: model_runs/DRAM_test/drawmodel_10000.ckpt
+iter=11000 : Lx: -50656.906250 Lz: -99.999870
+iter=12000 : Lx: 66775.054688 Lz: -99.999962
+iter=13000 : Lx: -402952.218750 Lz: -99.997589
+iter=14000 : Lx: -637815.812500 Lz: -99.999832
+iter=15000 : Lx: 66774.906250 Lz: -99.999054
+iter=16000 : Lx: 66775.046875 Lz: -100.000000
+iter=17000 : Lx: -402952.062500 Lz: -100.000000
+iter=18000 : Lx: -50656.855469 Lz: -99.999832
+iter=19000 : Lx: -168088.625000 Lz: -100.000000
+iter=20000 : Lx: -402952.312500 Lz: -100.000000
+Outputs saved in file: model_runs/DRAM_test/draw_data_20000.npy
+Model saved in file: model_runs/DRAM_test/drawmodel_20000.ckpt
+iter=21000 : Lx: -402952.187500 Lz: -99.999992
+iter=22000 : Lx: -872679.375000 Lz: -99.999985
+iter=23000 : Lx: -872679.375000 Lz: -99.999992
+iter=24000 : Lx: -637815.562500 Lz: -100.000000
+iter=25000 : Lx: -637815.812500 Lz: -100.000000
+iter=26000 : Lx: -520384.031250 Lz: -100.000000
+iter=27000 : Lx: 66774.906250 Lz: -99.999985
+iter=28000 : Lx: -755247.375000 Lz: -99.999985
+iter=29000 : Lx: 66774.945312 Lz: -99.999985
+iter=30000 : Lx: -872679.375000 Lz: -99.999985
+Outputs saved in file: model_runs/DRAM_test/draw_data_30000.npy
+Model saved in file: model_runs/DRAM_test/drawmodel_30000.ckpt
+iter=31000 : Lx: -755247.500000 Lz: -100.000000
+iter=32000 : Lx: -402952.062500 Lz: -100.000000
+iter=33000 : Lx: 66774.929688 Lz: -100.000000
+iter=34000 : Lx: -402952.281250 Lz: -100.000000
+iter=35000 : Lx: -285520.375000 Lz: -99.999985
+iter=36000 : Lx: -168088.703125 Lz: -100.000000
+iter=37000 : Lx: -637815.562500 Lz: -99.999924
+iter=38000 : Lx: -402952.187500 Lz: -100.000000
+iter=39000 : Lx: -520383.875000 Lz: -100.000000
+iter=40000 : Lx: -50656.863281 Lz: -100.000000
+Outputs saved in file: model_runs/DRAM_test/draw_data_40000.npy
+Model saved in file: model_runs/DRAM_test/drawmodel_40000.ckpt
+iter=41000 : Lx: -168088.734375 Lz: -100.000000
+iter=42000 : Lx: -168088.625000 Lz: -100.000000
+iter=43000 : Lx: -285520.250000 Lz: -100.000000
+iter=44000 : Lx: 66774.906250 Lz: -100.000000
+iter=45000 : Lx: -872679.375000 Lz: -100.000000
+iter=46000 : Lx: -637815.875000 Lz: -100.000000
+iter=47000 : Lx: -50656.910156 Lz: -99.999962
+iter=48000 : Lx: -637815.687500 Lz: -100.000000
+iter=49000 : Lx: -402951.875000 Lz: -100.000000
+iter=50000 : Lx: -168088.578125 Lz: -100.000000
+Outputs saved in file: model_runs/DRAM_test/draw_data_50000.npy
+Model saved in file: model_runs/DRAM_test/drawmodel_50000.ckpt
+iter=51000 : Lx: -520384.000000 Lz: -100.000000
+iter=52000 : Lx: 66774.992188 Lz: -100.000000
+iter=53000 : Lx: -872679.250000 Lz: -100.000000
+iter=54000 : Lx: -285520.375000 Lz: -100.000000
+iter=55000 : Lx: -402952.062500 Lz: -100.000000
+iter=56000 : Lx: 66774.898438 Lz: -100.000000
+iter=57000 : Lx: 66775.054688 Lz: -100.000000
+iter=58000 : Lx: -50656.707031 Lz: -100.000000
+iter=59000 : Lx: -402952.031250 Lz: -99.999992
+iter=60000 : Lx: -402952.031250 Lz: -100.000000
+Outputs saved in file: model_runs/DRAM_test/draw_data_60000.npy
+Model saved in file: model_runs/DRAM_test/drawmodel_60000.ckpt
+iter=61000 : Lx: -755247.375000 Lz: -100.000000
+iter=62000 : Lx: -637815.875000 Lz: -100.000000
+iter=63000 : Lx: 66775.070312 Lz: -100.000000
+iter=64000 : Lx: -520384.031250 Lz: -100.000000
+iter=65000 : Lx: -50656.867188 Lz: -99.999939
+iter=66000 : Lx: -520384.000000 Lz: -100.000000
+iter=67000 : Lx: -755247.437500 Lz: -100.000000
+iter=68000 : Lx: -168088.406250 Lz: -100.000000
+iter=69000 : Lx: 66774.929688 Lz: -100.000000
+iter=70000 : Lx: -637815.625000 Lz: -100.000000
+Outputs saved in file: model_runs/DRAM_test/draw_data_70000.npy
+Model saved in file: model_runs/DRAM_test/drawmodel_70000.ckpt
+iter=71000 : Lx: -50656.898438 Lz: -100.000000
+iter=72000 : Lx: -402952.187500 Lz: -100.000000
+iter=73000 : Lx: -402952.000000 Lz: -100.000000
+iter=74000 : Lx: -285520.531250 Lz: -100.000000
+iter=75000 : Lx: -285520.250000 Lz: -99.999985
+iter=76000 : Lx: -50656.671875 Lz: -99.999985
+iter=77000 : Lx: -168088.562500 Lz: -100.000000
+iter=78000 : Lx: -872679.125000 Lz: -100.000000
+iter=79000 : Lx: -755247.687500 Lz: -99.999985
+iter=80000 : Lx: -50656.917969 Lz: -99.999947
+Outputs saved in file: model_runs/DRAM_test/draw_data_80000.npy
+Model saved in file: model_runs/DRAM_test/drawmodel_80000.ckpt
+iter=81000 : Lx: -285520.312500 Lz: -100.000000
+iter=82000 : Lx: -50656.765625 Lz: -99.999992
+iter=83000 : Lx: -168088.562500 Lz: -100.000000
+iter=84000 : Lx: -872679.312500 Lz: -99.999985
+iter=85000 : Lx: -755247.625000 Lz: -100.000000
+iter=86000 : Lx: -872679.250000 Lz: -100.000000
+iter=87000 : Lx: -168088.515625 Lz: -100.000000
+iter=88000 : Lx: -50656.710938 Lz: -100.000000
+iter=89000 : Lx: -50656.753906 Lz: -100.000000
+iter=90000 : Lx: 66774.953125 Lz: -100.000000
+Outputs saved in file: model_runs/DRAM_test/draw_data_90000.npy
+Model saved in file: model_runs/DRAM_test/drawmodel_90000.ckpt
+iter=91000 : Lx: -872679.062500 Lz: -100.000000
+iter=92000 : Lx: -872679.187500 Lz: -99.999985
+iter=93000 : Lx: -168088.640625 Lz: -99.999985
+iter=94000 : Lx: -872679.312500 Lz: -99.999985
+iter=95000 : Lx: -872679.437500 Lz: -100.000000
+iter=96000 : Lx: -402952.250000 Lz: -99.999985
+iter=97000 : Lx: 66774.937500 Lz: -100.000000
+iter=98000 : Lx: -872679.375000 Lz: -99.999985
+iter=99000 : Lx: -755247.562500 Lz: -99.999985
+iter=100000 : Lx: 66774.929688 Lz: -100.000000
+Outputs saved in file: model_runs/DRAM_test/draw_data_100000.npy
+Model saved in file: model_runs/DRAM_test/drawmodel_100000.ckpt
+iter=101000 : Lx: -520383.718750 Lz: -100.000000
+iter=102000 : Lx: -755247.437500 Lz: -100.000000
+iter=103000 : Lx: -50656.699219 Lz: -100.000000
+iter=104000 : Lx: -285520.312500 Lz: -100.000000
+iter=105000 : Lx: -637815.562500 Lz: -100.000000
+iter=106000 : Lx: -637815.937500 Lz: -99.999992
+iter=107000 : Lx: -50656.796875 Lz: -100.000000
+iter=108000 : Lx: -285520.375000 Lz: -100.000000
+iter=109000 : Lx: -520383.875000 Lz: -100.000000
+iter=110000 : Lx: -872679.250000 Lz: -99.999992
+Outputs saved in file: model_runs/DRAM_test/draw_data_110000.npy
+Model saved in file: model_runs/DRAM_test/drawmodel_110000.ckpt
+iter=111000 : Lx: -755247.312500 Lz: -100.000000
+iter=112000 : Lx: -755247.125000 Lz: -100.000000
+iter=113000 : Lx: -285520.468750 Lz: -99.999985
+iter=114000 : Lx: -50656.761719 Lz: -100.000000
+iter=115000 : Lx: -50656.804688 Lz: -100.000000
+iter=116000 : Lx: -755247.562500 Lz: -99.999985
+iter=117000 : Lx: -755247.687500 Lz: -99.999985
+iter=118000 : Lx: -872679.000000 Lz: -99.999985
+iter=119000 : Lx: -402952.125000 Lz: -100.000000
+iter=120000 : Lx: -168088.546875 Lz: -100.000000
+Outputs saved in file: model_runs/DRAM_test/draw_data_120000.npy
+Model saved in file: model_runs/DRAM_test/drawmodel_120000.ckpt
+iter=121000 : Lx: -637815.562500 Lz: -99.999985
+iter=122000 : Lx: -520383.875000 Lz: -99.999985
+iter=123000 : Lx: -402952.187500 Lz: -99.999992
+iter=124000 : Lx: -637815.562500 Lz: -100.000000
+iter=125000 : Lx: -168088.671875 Lz: -99.999992
+iter=126000 : Lx: -637815.625000 Lz: -100.000000
+iter=127000 : Lx: -637815.625000 Lz: -99.999992
+iter=128000 : Lx: -402952.125000 Lz: -99.999969
+iter=129000 : Lx: -50656.902344 Lz: -100.000000
+iter=130000 : Lx: -520383.968750 Lz: -100.000000
+Outputs saved in file: model_runs/DRAM_test/draw_data_130000.npy
+Model saved in file: model_runs/DRAM_test/drawmodel_130000.ckpt
+iter=131000 : Lx: -637815.750000 Lz: -100.000000
+iter=132000 : Lx: -50656.773438 Lz: -100.000000
+iter=133000 : Lx: -285520.562500 Lz: -99.999985
+iter=134000 : Lx: -50656.863281 Lz: -99.999985
+iter=135000 : Lx: -168088.593750 Lz: -99.999985
+iter=136000 : Lx: -168088.484375 Lz: -100.000000
+iter=137000 : Lx: -872679.312500 Lz: -100.000000
+iter=138000 : Lx: -50656.734375 Lz: -99.999985
+iter=139000 : Lx: -402952.125000 Lz: -99.999985
+iter=140000 : Lx: -402952.062500 Lz: -99.999985
+Outputs saved in file: model_runs/DRAM_test/draw_data_140000.npy
+Model saved in file: model_runs/DRAM_test/drawmodel_140000.ckpt
+iter=141000 : Lx: -168088.656250 Lz: -100.000000
+iter=142000 : Lx: -285520.125000 Lz: -100.000000
+iter=143000 : Lx: -755247.437500 Lz: -100.000000
+iter=144000 : Lx: -168088.640625 Lz: -100.000000
+iter=145000 : Lx: -520383.875000 Lz: -100.000000
+iter=146000 : Lx: -872679.250000 Lz: -99.999985
+iter=147000 : Lx: -168088.500000 Lz: -100.000000
+iter=148000 : Lx: -50656.945312 Lz: -99.999985
+iter=149000 : Lx: 66774.906250 Lz: -100.000000
+iter=150000 : Lx: -755247.437500 Lz: -100.000000
+Outputs saved in file: model_runs/DRAM_test/draw_data_150000.npy
+Model saved in file: model_runs/DRAM_test/drawmodel_150000.ckpt
+iter=151000 : Lx: 66774.937500 Lz: -99.999992
+iter=152000 : Lx: -755247.312500 Lz: -100.000000
+iter=153000 : Lx: 66774.992188 Lz: -99.999985
+iter=154000 : Lx: -872679.437500 Lz: -100.000000
+iter=155000 : Lx: -520383.875000 Lz: -100.000000
+iter=156000 : Lx: -755247.375000 Lz: -100.000000
+iter=157000 : Lx: -520383.968750 Lz: -100.000000
+iter=158000 : Lx: -285520.312500 Lz: -100.000000
+iter=159000 : Lx: -637815.875000 Lz: -100.000000
+iter=160000 : Lx: -755247.437500 Lz: -99.999985
+Outputs saved in file: model_runs/DRAM_test/draw_data_160000.npy
+Model saved in file: model_runs/DRAM_test/drawmodel_160000.ckpt
+iter=161000 : Lx: -637815.750000 Lz: -99.999985
+iter=162000 : Lx: 66774.906250 Lz: -100.000000
+iter=163000 : Lx: -285520.343750 Lz: -99.999985
+iter=164000 : Lx: -755247.687500 Lz: -99.999992
+iter=165000 : Lx: -637815.750000 Lz: -100.000000
+iter=166000 : Lx: -755247.750000 Lz: -99.999985
+iter=167000 : Lx: -402952.281250 Lz: -100.000000
+iter=168000 : Lx: -168088.578125 Lz: -99.999985
+iter=169000 : Lx: 66775.031250 Lz: -99.999985
+iter=170000 : Lx: -520383.875000 Lz: -100.000000
+Outputs saved in file: model_runs/DRAM_test/draw_data_170000.npy
+Model saved in file: model_runs/DRAM_test/drawmodel_170000.ckpt
+iter=171000 : Lx: 66775.023438 Lz: -99.999985
+iter=172000 : Lx: -872679.250000 Lz: -99.999985
+iter=173000 : Lx: -755247.562500 Lz: -100.000000
+iter=174000 : Lx: -402952.062500 Lz: -99.999985
+iter=175000 : Lx: -168088.500000 Lz: -100.000000
+iter=176000 : Lx: -872679.250000 Lz: -99.999985
+iter=177000 : Lx: -50656.761719 Lz: -99.999985
+iter=178000 : Lx: -637815.812500 Lz: -99.999992
+iter=179000 : Lx: -50656.902344 Lz: -99.999985
+iter=180000 : Lx: -168088.625000 Lz: -99.999992
+Outputs saved in file: model_runs/DRAM_test/draw_data_180000.npy
+Model saved in file: model_runs/DRAM_test/drawmodel_180000.ckpt
+iter=181000 : Lx: -637815.625000 Lz: -99.999985
+iter=182000 : Lx: 66774.906250 Lz: -99.999985
+iter=183000 : Lx: -402952.125000 Lz: -100.000000
+iter=184000 : Lx: -637815.812500 Lz: -100.000000
+iter=185000 : Lx: -637815.750000 Lz: -100.000000
+iter=186000 : Lx: -637815.750000 Lz: -100.000000
+iter=187000 : Lx: -520384.156250 Lz: -100.000000
+iter=188000 : Lx: -520383.750000 Lz: -99.999992
+iter=189000 : Lx: -520383.937500 Lz: -99.999985
+iter=190000 : Lx: -50656.835938 Lz: -100.000000
+Outputs saved in file: model_runs/DRAM_test/draw_data_190000.npy
+Model saved in file: model_runs/DRAM_test/drawmodel_190000.ckpt
+iter=191000 : Lx: -637815.687500 Lz: -100.000000
+iter=192000 : Lx: -168088.703125 Lz: -100.000000
+iter=193000 : Lx: -872679.187500 Lz: -99.999985
+iter=194000 : Lx: 66775.023438 Lz: -99.999985
+iter=195000 : Lx: -168088.562500 Lz: -99.999985
+iter=196000 : Lx: -872679.125000 Lz: -100.000000
+iter=197000 : Lx: -402952.156250 Lz: -99.999985
+iter=198000 : Lx: -285520.437500 Lz: -100.000000
+iter=199000 : Lx: -520383.937500 Lz: -100.000000
+iter=200000 : Lx: -50656.828125 Lz: -99.999985
+Outputs saved in file: model_runs/DRAM_test/draw_data_200000.npy
+Model saved in file: model_runs/DRAM_test/drawmodel_200000.ckpt
+iter=201000 : Lx: -637815.937500 Lz: -99.999985
+iter=202000 : Lx: -285520.375000 Lz: -100.000000
+iter=203000 : Lx: -50656.773438 Lz: -100.000000
+iter=204000 : Lx: -520383.812500 Lz: -100.000000
+iter=205000 : Lx: -168088.562500 Lz: -100.000000
+iter=206000 : Lx: 66774.906250 Lz: -100.000000
+iter=207000 : Lx: -285520.500000 Lz: -100.000000
+iter=208000 : Lx: -637815.562500 Lz: -100.000000
+iter=209000 : Lx: 66774.976562 Lz: -100.000000
+iter=210000 : Lx: -637815.625000 Lz: -100.000000
+Outputs saved in file: model_runs/DRAM_test/draw_data_210000.npy
+Model saved in file: model_runs/DRAM_test/drawmodel_210000.ckpt
+iter=211000 : Lx: -520383.875000 Lz: -99.999985
+iter=212000 : Lx: 66775.015625 Lz: -99.999985
+iter=213000 : Lx: -50656.718750 Lz: -100.000000
+iter=214000 : Lx: -755247.437500 Lz: -99.999985
+iter=215000 : Lx: 66774.953125 Lz: -99.999985
+iter=216000 : Lx: -755247.375000 Lz: -99.999992
+iter=217000 : Lx: -168088.609375 Lz: -100.000000
+iter=218000 : Lx: -520384.125000 Lz: -99.999985
+iter=219000 : Lx: -168088.468750 Lz: -100.000000
+iter=220000 : Lx: -520383.937500 Lz: -100.000000
+Outputs saved in file: model_runs/DRAM_test/draw_data_220000.npy
+Model saved in file: model_runs/DRAM_test/drawmodel_220000.ckpt
+iter=221000 : Lx: -285520.312500 Lz: -99.999992
+iter=222000 : Lx: -285520.187500 Lz: -100.000000
+iter=223000 : Lx: -285520.343750 Lz: -99.999985
+iter=224000 : Lx: -755247.187500 Lz: -99.999985
+iter=225000 : Lx: -402952.062500 Lz: -99.999985
+iter=226000 : Lx: -872679.000000 Lz: -100.000000
+iter=227000 : Lx: -402952.062500 Lz: -99.999985
+iter=228000 : Lx: 66774.914062 Lz: -100.000000
+iter=229000 : Lx: -637815.625000 Lz: -99.999985
+iter=230000 : Lx: -168088.515625 Lz: -100.000000
+Outputs saved in file: model_runs/DRAM_test/draw_data_230000.npy
+Model saved in file: model_runs/DRAM_test/drawmodel_230000.ckpt
+iter=231000 : Lx: -285520.093750 Lz: -99.999985
+iter=232000 : Lx: -520384.250000 Lz: -99.999985
+iter=233000 : Lx: -755247.437500 Lz: -99.999985
+iter=234000 : Lx: -50656.738281 Lz: -100.000000
+iter=235000 : Lx: -168088.546875 Lz: -99.999985
+iter=236000 : Lx: -168088.500000 Lz: -99.999985
+iter=237000 : Lx: -285520.406250 Lz: -99.999985
+iter=238000 : Lx: -637815.562500 Lz: -100.000000
+iter=239000 : Lx: -50656.851562 Lz: -100.000000
+iter=240000 : Lx: -50656.667969 Lz: -100.000000
+Outputs saved in file: model_runs/DRAM_test/draw_data_240000.npy
+Model saved in file: model_runs/DRAM_test/drawmodel_240000.ckpt
+iter=241000 : Lx: -402952.062500 Lz: -99.999985
+iter=242000 : Lx: -285520.500000 Lz: -100.000000
+iter=243000 : Lx: -637815.625000 Lz: -99.999985
+iter=244000 : Lx: -755247.437500 Lz: -99.999985
+iter=245000 : Lx: -755247.562500 Lz: -100.000000
+iter=246000 : Lx: -637815.937500 Lz: -99.999992
+iter=247000 : Lx: 66774.906250 Lz: -100.000000
+iter=248000 : Lx: -168088.750000 Lz: -100.000000
+iter=249000 : Lx: -755247.687500 Lz: -100.000000
+iter=250000 : Lx: -872679.187500 Lz: -100.000000
+Outputs saved in file: model_runs/DRAM_test/draw_data_250000.npy
+Model saved in file: model_runs/DRAM_test/drawmodel_250000.ckpt
+iter=251000 : Lx: -402952.250000 Lz: -100.000000
+iter=252000 : Lx: -50656.812500 Lz: -99.999985
+iter=253000 : Lx: -168088.453125 Lz: -100.000000
+iter=254000 : Lx: -285520.281250 Lz: -99.999985
+iter=255000 : Lx: -520383.968750 Lz: -99.999985
+iter=256000 : Lx: -285520.437500 Lz: -99.999985
+iter=257000 : Lx: -872679.250000 Lz: -100.000000
+iter=258000 : Lx: -520383.937500 Lz: -99.999985
+iter=259000 : Lx: -637815.500000 Lz: -99.999985
+iter=260000 : Lx: -168088.703125 Lz: -100.000000
+Outputs saved in file: model_runs/DRAM_test/draw_data_260000.npy
+Model saved in file: model_runs/DRAM_test/drawmodel_260000.ckpt
+iter=261000 : Lx: -285520.187500 Lz: -99.999985
+iter=262000 : Lx: -168088.625000 Lz: -99.999985
+iter=263000 : Lx: -50656.835938 Lz: -100.000000
+iter=264000 : Lx: -168088.625000 Lz: -99.999985
+iter=265000 : Lx: -872679.000000 Lz: -100.000000
+iter=266000 : Lx: -50656.843750 Lz: -100.000000
+iter=267000 : Lx: -520384.187500 Lz: -100.000000
+iter=268000 : Lx: -402952.312500 Lz: -99.999985
+iter=269000 : Lx: -168088.625000 Lz: -100.000000
+iter=270000 : Lx: -520383.937500 Lz: -99.999992
+Outputs saved in file: model_runs/DRAM_test/draw_data_270000.npy
+Model saved in file: model_runs/DRAM_test/drawmodel_270000.ckpt
+iter=271000 : Lx: -872679.250000 Lz: -100.000000
+iter=272000 : Lx: -50656.898438 Lz: -100.000000
+iter=273000 : Lx: -285520.343750 Lz: -99.999992
+iter=274000 : Lx: -637815.687500 Lz: -100.000000
+iter=275000 : Lx: -755247.375000 Lz: -100.000000
+iter=276000 : Lx: 66775.039062 Lz: -100.000000
+iter=277000 : Lx: 66775.070312 Lz: -100.000000
+iter=278000 : Lx: -50656.769531 Lz: -100.000000
+iter=279000 : Lx: -50656.906250 Lz: -100.000000
+iter=280000 : Lx: -402952.125000 Lz: -100.000000
+Outputs saved in file: model_runs/DRAM_test/draw_data_280000.npy
+Model saved in file: model_runs/DRAM_test/drawmodel_280000.ckpt
+iter=281000 : Lx: -285520.312500 Lz: -99.999985
+iter=282000 : Lx: -520384.062500 Lz: -100.000000
+iter=283000 : Lx: -402952.250000 Lz: -100.000000
+iter=284000 : Lx: -637815.687500 Lz: -100.000000
+iter=285000 : Lx: -872679.250000 Lz: -100.000000
+iter=286000 : Lx: -50656.812500 Lz: -100.000000
+iter=287000 : Lx: -637815.625000 Lz: -99.999992
+iter=288000 : Lx: -168088.562500 Lz: -100.000000
+iter=289000 : Lx: -872679.250000 Lz: -100.000000
+iter=290000 : Lx: 66774.929688 Lz: -100.000000
+Outputs saved in file: model_runs/DRAM_test/draw_data_290000.npy
+Model saved in file: model_runs/DRAM_test/drawmodel_290000.ckpt
+iter=291000 : Lx: -520383.812500 Lz: -99.999985
+iter=292000 : Lx: -755247.562500 Lz: -99.999992
+iter=293000 : Lx: -755247.625000 Lz: -99.999985
+iter=294000 : Lx: -872679.562500 Lz: -99.999985
+iter=295000 : Lx: -285520.218750 Lz: -100.000000
+iter=296000 : Lx: -285520.312500 Lz: -100.000000
+iter=297000 : Lx: -872679.250000 Lz: -100.000000
+iter=298000 : Lx: -637815.562500 Lz: -99.999985
+iter=299000 : Lx: -872679.187500 Lz: -100.000000
+iter=300000 : Lx: -872679.125000 Lz: -100.000000
+Outputs saved in file: model_runs/DRAM_test/draw_data_300000.npy
+Model saved in file: model_runs/DRAM_test/drawmodel_300000.ckpt
+iter=301000 : Lx: -520383.843750 Lz: -99.999985
+iter=302000 : Lx: -755247.375000 Lz: -100.000000
+iter=303000 : Lx: -755247.500000 Lz: -99.999985
+iter=304000 : Lx: 66775.007812 Lz: -99.999985
+iter=305000 : Lx: -872679.250000 Lz: -99.999985
+iter=306000 : Lx: -285520.312500 Lz: -100.000000
+iter=307000 : Lx: -872679.312500 Lz: -99.999985
+iter=308000 : Lx: -50656.828125 Lz: -99.999985
+iter=309000 : Lx: -872679.250000 Lz: -100.000000
+iter=310000 : Lx: -872679.312500 Lz: -99.999985
+Outputs saved in file: model_runs/DRAM_test/draw_data_310000.npy
+Model saved in file: model_runs/DRAM_test/drawmodel_310000.ckpt
+iter=311000 : Lx: -520384.156250 Lz: -100.000000
+iter=312000 : Lx: -402952.218750 Lz: -100.000000
+iter=313000 : Lx: -755247.625000 Lz: -100.000000
+iter=314000 : Lx: -755247.437500 Lz: -99.999985
+iter=315000 : Lx: -872679.312500 Lz: -99.999985
+iter=316000 : Lx: -637815.812500 Lz: -100.000000
+iter=317000 : Lx: -755247.500000 Lz: -99.999985
+iter=318000 : Lx: -168088.609375 Lz: -100.000000
+iter=319000 : Lx: -755247.375000 Lz: -100.000000
+iter=320000 : Lx: -168088.515625 Lz: -99.999985
+Outputs saved in file: model_runs/DRAM_test/draw_data_320000.npy
+Model saved in file: model_runs/DRAM_test/drawmodel_320000.ckpt
+iter=321000 : Lx: -872679.250000 Lz: -100.000000
+iter=322000 : Lx: -285520.437500 Lz: -99.999985
+iter=323000 : Lx: -637815.625000 Lz: -99.999985
+iter=324000 : Lx: -402952.031250 Lz: -99.999992
+iter=325000 : Lx: -637815.625000 Lz: -99.999985
+iter=326000 : Lx: 66775.062500 Lz: -100.000000
+iter=327000 : Lx: -520384.000000 Lz: -100.000000
+iter=328000 : Lx: -402952.000000 Lz: -99.999985
+iter=329000 : Lx: -872679.125000 Lz: -99.999985
+iter=330000 : Lx: 66774.906250 Lz: -99.999985
+Outputs saved in file: model_runs/DRAM_test/draw_data_330000.npy
+Model saved in file: model_runs/DRAM_test/drawmodel_330000.ckpt
+iter=331000 : Lx: -50656.792969 Lz: -100.000000
+iter=332000 : Lx: 66774.906250 Lz: -99.999962
+iter=333000 : Lx: -50656.746094 Lz: -99.999992
+iter=334000 : Lx: -520383.937500 Lz: -99.999985
+iter=335000 : Lx: -168088.671875 Lz: -99.999985
+iter=336000 : Lx: -50656.707031 Lz: -99.999985
+iter=337000 : Lx: -50656.730469 Lz: -100.000000
+iter=338000 : Lx: -520383.687500 Lz: -100.000000
+iter=339000 : Lx: -755247.500000 Lz: -100.000000
+iter=340000 : Lx: -402952.031250 Lz: -100.000000
+Outputs saved in file: model_runs/DRAM_test/draw_data_340000.npy
+Model saved in file: model_runs/DRAM_test/drawmodel_340000.ckpt
+iter=341000 : Lx: -872679.125000 Lz: -100.000000
+iter=342000 : Lx: -168088.703125 Lz: -99.999985
+iter=343000 : Lx: -520384.093750 Lz: -99.999985
+iter=344000 : Lx: 66775.070312 Lz: -100.000000
+iter=345000 : Lx: -637815.687500 Lz: -100.000000
+iter=346000 : Lx: -402952.312500 Lz: -100.000000
+iter=347000 : Lx: -168088.578125 Lz: -100.000000
+iter=348000 : Lx: -168088.656250 Lz: -99.999985
+iter=349000 : Lx: -285520.375000 Lz: -99.999985
+iter=350000 : Lx: -520384.062500 Lz: -99.999985
+Outputs saved in file: model_runs/DRAM_test/draw_data_350000.npy
+Model saved in file: model_runs/DRAM_test/drawmodel_350000.ckpt
+iter=351000 : Lx: -520383.687500 Lz: -99.999985
+iter=352000 : Lx: -168088.625000 Lz: -100.000000
+iter=353000 : Lx: -50656.890625 Lz: -100.000000
+iter=354000 : Lx: -637815.875000 Lz: -100.000000
+iter=355000 : Lx: -520384.093750 Lz: -99.999985
+iter=356000 : Lx: 66774.976562 Lz: -100.000000
+iter=357000 : Lx: -637815.625000 Lz: -99.999992
+iter=358000 : Lx: -50656.734375 Lz: -100.000000
+iter=359000 : Lx: -168088.468750 Lz: -100.000000
+iter=360000 : Lx: 66774.953125 Lz: -100.000000
+Outputs saved in file: model_runs/DRAM_test/draw_data_360000.npy
+Model saved in file: model_runs/DRAM_test/drawmodel_360000.ckpt
+iter=361000 : Lx: -50656.714844 Lz: -99.999985
+iter=362000 : Lx: -168088.687500 Lz: -99.999985
+iter=363000 : Lx: -168088.531250 Lz: -100.000000
+iter=364000 : Lx: -285520.312500 Lz: -100.000000
+iter=365000 : Lx: 66775.031250 Lz: -100.000000
+iter=366000 : Lx: -755247.500000 Lz: -100.000000
+iter=367000 : Lx: -402952.187500 Lz: -99.999985
+iter=368000 : Lx: -50656.757812 Lz: -99.999985
+iter=369000 : Lx: -520384.093750 Lz: -100.000000
+iter=370000 : Lx: -872679.125000 Lz: -99.999985
+Outputs saved in file: model_runs/DRAM_test/draw_data_370000.npy
+Model saved in file: model_runs/DRAM_test/drawmodel_370000.ckpt
+iter=371000 : Lx: -872679.250000 Lz: -99.999992
+iter=372000 : Lx: -637815.687500 Lz: -100.000000
+iter=373000 : Lx: -402952.156250 Lz: -100.000000
+iter=374000 : Lx: -637815.937500 Lz: -100.000000
+iter=375000 : Lx: -402952.250000 Lz: -99.999985
+iter=376000 : Lx: -168088.718750 Lz: -99.999985
+iter=377000 : Lx: -637815.875000 Lz: -100.000000
+iter=378000 : Lx: -872679.312500 Lz: -100.000000
+iter=379000 : Lx: -50656.867188 Lz: -100.000000
+iter=380000 : Lx: -50656.738281 Lz: -99.999992
+Outputs saved in file: model_runs/DRAM_test/draw_data_380000.npy
+Model saved in file: model_runs/DRAM_test/drawmodel_380000.ckpt
+iter=381000 : Lx: -402952.187500 Lz: -99.999985
+iter=382000 : Lx: -755247.562500 Lz: -99.999985
+iter=383000 : Lx: -520383.593750 Lz: -100.000000
+iter=384000 : Lx: 66774.937500 Lz: -99.999992
+iter=385000 : Lx: -520383.937500 Lz: -99.999985
+iter=386000 : Lx: -168088.609375 Lz: -100.000000
+iter=387000 : Lx: -520384.031250 Lz: -100.000000
+iter=388000 : Lx: 66774.914062 Lz: -100.000000
+iter=389000 : Lx: -872679.375000 Lz: -100.000000
+iter=390000 : Lx: -520384.156250 Lz: -99.999985
+Outputs saved in file: model_runs/DRAM_test/draw_data_390000.npy
+Model saved in file: model_runs/DRAM_test/drawmodel_390000.ckpt
+iter=391000 : Lx: -168088.703125 Lz: -99.999985
+iter=392000 : Lx: -872679.062500 Lz: -100.000000
+iter=393000 : Lx: -755247.500000 Lz: -99.999985
+iter=394000 : Lx: -637815.500000 Lz: -100.000000
+iter=395000 : Lx: -285520.375000 Lz: -100.000000
+iter=396000 : Lx: -872679.312500 Lz: -99.999992
+iter=397000 : Lx: -50656.789062 Lz: -100.000000
+iter=398000 : Lx: -168088.640625 Lz: -99.999985
+iter=399000 : Lx: -755247.500000 Lz: -99.999985
+iter=400000 : Lx: -872679.250000 Lz: -99.999985
+Outputs saved in file: model_runs/DRAM_test/draw_data_400000.npy
+Model saved in file: model_runs/DRAM_test/drawmodel_400000.ckpt
+iter=401000 : Lx: -872679.312500 Lz: -100.000000
+iter=402000 : Lx: -402952.093750 Lz: -100.000000
+iter=403000 : Lx: -637815.500000 Lz: -100.000000
+iter=404000 : Lx: -755247.375000 Lz: -100.000000
+iter=405000 : Lx: -637815.625000 Lz: -99.999985
+iter=406000 : Lx: -637815.687500 Lz: -100.000000
+iter=407000 : Lx: -50656.722656 Lz: -100.000000
+iter=408000 : Lx: 66775.000000 Lz: -99.999985
+iter=409000 : Lx: -872679.375000 Lz: -99.999985
+iter=410000 : Lx: -285520.343750 Lz: -99.999992
+Outputs saved in file: model_runs/DRAM_test/draw_data_410000.npy
+Model saved in file: model_runs/DRAM_test/drawmodel_410000.ckpt
+iter=411000 : Lx: -168088.515625 Lz: -99.999985
+iter=412000 : Lx: -755247.500000 Lz: -100.000000
+iter=413000 : Lx: -50656.863281 Lz: -100.000000
+iter=414000 : Lx: -285520.312500 Lz: -99.999992
+iter=415000 : Lx: -50656.812500 Lz: -100.000000
+iter=416000 : Lx: -50656.859375 Lz: -99.999985
+iter=417000 : Lx: -285520.343750 Lz: -99.999985
+iter=418000 : Lx: -50656.781250 Lz: -99.999985
+iter=419000 : Lx: 66774.906250 Lz: -99.999985
+iter=420000 : Lx: -402952.062500 Lz: -100.000000
+Outputs saved in file: model_runs/DRAM_test/draw_data_420000.npy
+Model saved in file: model_runs/DRAM_test/drawmodel_420000.ckpt
+iter=421000 : Lx: -520384.062500 Lz: -100.000000
+iter=422000 : Lx: -755247.500000 Lz: -100.000000
+iter=423000 : Lx: -637815.687500 Lz: -100.000000
+iter=424000 : Lx: -402952.125000 Lz: -100.000000
+iter=425000 : Lx: 66775.023438 Lz: -100.000000
+iter=426000 : Lx: 66774.992188 Lz: -99.999985
+iter=427000 : Lx: -872679.312500 Lz: -100.000000
+iter=428000 : Lx: -285520.343750 Lz: -100.000000
+iter=429000 : Lx: -637815.812500 Lz: -100.000000
+iter=430000 : Lx: -520383.968750 Lz: -99.999985
+Outputs saved in file: model_runs/DRAM_test/draw_data_430000.npy
+Model saved in file: model_runs/DRAM_test/drawmodel_430000.ckpt
+iter=431000 : Lx: -168088.578125 Lz: -99.999985
+iter=432000 : Lx: 66774.906250 Lz: -99.999985
+iter=433000 : Lx: -520383.937500 Lz: -100.000000
+iter=434000 : Lx: -520383.843750 Lz: -99.999985
+iter=435000 : Lx: 66775.039062 Lz: -99.999985
+iter=436000 : Lx: -872679.250000 Lz: -99.999985
+iter=437000 : Lx: -50656.843750 Lz: -99.999985
+iter=438000 : Lx: 66774.960938 Lz: -99.999992
+iter=439000 : Lx: -637815.562500 Lz: -100.000000
+iter=440000 : Lx: 66775.039062 Lz: -100.000000
+Outputs saved in file: model_runs/DRAM_test/draw_data_440000.npy
+Model saved in file: model_runs/DRAM_test/drawmodel_440000.ckpt
+iter=441000 : Lx: -520383.968750 Lz: -100.000000
+iter=442000 : Lx: -50656.796875 Lz: -100.000000
+iter=443000 : Lx: -872679.312500 Lz: -99.999985
+iter=444000 : Lx: -50656.804688 Lz: -100.000000
+iter=445000 : Lx: -520383.750000 Lz: -99.999985
+iter=446000 : Lx: -168088.593750 Lz: -99.999992
+iter=447000 : Lx: -285520.375000 Lz: -100.000000
+iter=448000 : Lx: -637815.562500 Lz: -99.999985
+iter=449000 : Lx: -402952.218750 Lz: -99.999985
+iter=450000 : Lx: -402951.937500 Lz: -99.999985
+Outputs saved in file: model_runs/DRAM_test/draw_data_450000.npy
+Model saved in file: model_runs/DRAM_test/drawmodel_450000.ckpt
+iter=451000 : Lx: 66774.976562 Lz: -99.999985
+iter=452000 : Lx: -637815.625000 Lz: -99.999985
+iter=453000 : Lx: -285520.437500 Lz: -99.999969
+iter=454000 : Lx: -285520.156250 Lz: -99.999985
+iter=455000 : Lx: -520383.812500 Lz: -99.999985
+iter=456000 : Lx: -755247.687500 Lz: -100.000000
+iter=457000 : Lx: -285520.343750 Lz: -100.000000
+iter=458000 : Lx: -168088.625000 Lz: -99.999985
+iter=459000 : Lx: 66775.007812 Lz: -100.000000
+iter=460000 : Lx: -285520.437500 Lz: -99.999992
+Outputs saved in file: model_runs/DRAM_test/draw_data_460000.npy
+Model saved in file: model_runs/DRAM_test/drawmodel_460000.ckpt
+iter=461000 : Lx: -520383.656250 Lz: -100.000000
+iter=462000 : Lx: -637815.687500 Lz: -100.000000
+iter=463000 : Lx: -755247.500000 Lz: -99.999985
+iter=464000 : Lx: -755247.375000 Lz: -99.999992
+iter=465000 : Lx: -285520.375000 Lz: -99.999985
+iter=466000 : Lx: 66775.015625 Lz: -100.000000
+iter=467000 : Lx: 66775.000000 Lz: -99.999985
+iter=468000 : Lx: -285520.343750 Lz: -100.000000
+iter=469000 : Lx: -285520.343750 Lz: -99.999985
+iter=470000 : Lx: -50656.804688 Lz: -100.000000
+Outputs saved in file: model_runs/DRAM_test/draw_data_470000.npy
+Model saved in file: model_runs/DRAM_test/drawmodel_470000.ckpt
+iter=471000 : Lx: -755247.437500 Lz: -100.000000
+iter=472000 : Lx: -637815.687500 Lz: -99.999985
+iter=473000 : Lx: -872679.062500 Lz: -100.000000
+iter=474000 : Lx: 66775.062500 Lz: -99.999985
+iter=475000 : Lx: -755247.437500 Lz: -100.000000
+iter=476000 : Lx: -50656.882812 Lz: -100.000000
+iter=477000 : Lx: -285520.500000 Lz: -99.999985
+iter=478000 : Lx: -872679.187500 Lz: -100.000000
+iter=479000 : Lx: -872679.437500 Lz: -100.000000
+iter=480000 : Lx: -520383.968750 Lz: -100.000000
+Outputs saved in file: model_runs/DRAM_test/draw_data_480000.npy
+Model saved in file: model_runs/DRAM_test/drawmodel_480000.ckpt
+iter=481000 : Lx: 66774.898438 Lz: -100.000000
+iter=482000 : Lx: -168088.453125 Lz: -99.999985
+iter=483000 : Lx: -637815.750000 Lz: -100.000000
+iter=484000 : Lx: -755247.562500 Lz: -99.999985
+iter=485000 : Lx: -50656.742188 Lz: -99.999985
+iter=486000 : Lx: -168088.421875 Lz: -99.999985
+iter=487000 : Lx: -755247.375000 Lz: -100.000000
+iter=488000 : Lx: -755247.562500 Lz: -99.999992
+iter=489000 : Lx: -50656.789062 Lz: -100.000000
+iter=490000 : Lx: -285520.281250 Lz: -99.999985
+Outputs saved in file: model_runs/DRAM_test/draw_data_490000.npy
+Model saved in file: model_runs/DRAM_test/drawmodel_490000.ckpt
+iter=491000 : Lx: -637815.687500 Lz: -99.999992
+iter=492000 : Lx: -168088.500000 Lz: -100.000000
+iter=493000 : Lx: -755247.375000 Lz: -99.999985
+iter=494000 : Lx: -50656.804688 Lz: -100.000000
+iter=495000 : Lx: -872679.125000 Lz: -99.999985
+iter=496000 : Lx: -50656.671875 Lz: -99.999954
+iter=497000 : Lx: -285520.375000 Lz: -99.999985
+iter=498000 : Lx: -755247.437500 Lz: -99.999992
+iter=499000 : Lx: -285520.468750 Lz: -99.999969

@@ -1,3 +1,4 @@
-model_checkpoint_path: "drawmodel_10000.ckpt"
+model_checkpoint_path: "drawmodel_20000.ckpt"
 all_model_checkpoint_paths: "drawmodel_0.ckpt"
 all_model_checkpoint_paths: "drawmodel_10000.ckpt"
+all_model_checkpoint_paths: "drawmodel_20000.ckpt"

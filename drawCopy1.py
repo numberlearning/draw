@@ -22,17 +22,17 @@ FLAGS = tf.flags.FLAGS
 
 ## MODEL PARAMETERS ## 
 
-A,B = 28, 28#100,100 # image width,height
+A,B = 100,100 # image width,height
 img_size = B*A # the canvas size
 enc_size = 256 # number of hidden units / output size in LSTM
 dec_size = 256
-read_n = 12 # read glimpse grid width/height
-write_n = 12 # write glimpse grid width/height
+read_n = 10#12 # read glimpse grid width/height
+write_n = 5#12 # write glimpse grid width/height
 read_size = 2*read_n*read_n if FLAGS.read_attn else 2*img_size
 write_size = write_n*write_n if FLAGS.write_attn else img_size
 z_size = 10#2 # QSampler output size
-T = 100 # MNIST generation sequence length
-batch_size = 100#100 # training minibatch size
+T = 5#100 # MNIST generation sequence length
+batch_size = 1 # training minibatch size
 train_iters = 500000
 learning_rate = 1e-3 # learning rate for optimizer
 eps = 1e-8 # epsilon for numerical stability
@@ -42,7 +42,7 @@ eps = 1e-8 # epsilon for numerical stability
 DO_SHARE=None # workaround for variable_scope(reuse=True)
 
 x = tf.placeholder(tf.float32,shape=(batch_size,img_size)) # input (batch_size * img_size)
-e=tf.random_normal((batch_size,z_size), mean=0, stddev=1) # Qsampler noise
+onehot_labels = tf.placeholder(tf.float32, shape=(batch_size, z_size))
 lstm_enc = tf.contrib.rnn.LSTMCell(enc_size, state_is_tuple=True) # encoder Op
 lstm_dec = tf.contrib.rnn.LSTMCell(dec_size, state_is_tuple=True) # decoder Op
 
@@ -53,7 +53,6 @@ def linear(x,output_dim):
     """
     w=tf.get_variable("w", [x.get_shape()[1], output_dim]) 
     b=tf.get_variable("b", [output_dim], initializer=tf.constant_initializer(0.0))
-    #b=tf.get_variable("b", [output_dim], initializer=tf.random_normal_initializer())
     return tf.matmul(x,w)+b
 
 def filterbank(gx, gy, sigma2,delta, N):
@@ -76,21 +75,27 @@ def filterbank(gx, gy, sigma2,delta, N):
 def attn_window(scope,h_dec,N):
     with tf.variable_scope(scope,reuse=DO_SHARE):
         params=linear(h_dec,5)
-    # gx_,gy_,log_sigma2,log_delta,log_gamma=tf.split(1,5,params)
     gx_,gy_,log_sigma2,log_delta,log_gamma=tf.split(params,5,1)
     gx=(A+1)/2*(gx_+1)
     gy=(B+1)/2*(gy_+1)
+#    if gx > A:
+#        gx = A
+#    if gy > B:
+#        gy = B
+#    if gx < 0:
+#        gx = 0
+#    if gy < 0:
+#        gy = 0
+
     sigma2=tf.exp(log_sigma2)
     delta=(max(A,B)-1)/(N-1)*tf.exp(log_delta) # batch x N
+    # change delta, gx, gy constraints in the future
     Fx, Fy = filterbank(gx,gy,sigma2,delta,N) 
     gamma = tf.exp(log_gamma)
     return Fx, Fy, gamma, gx, gy, delta
 
 ## READ ## 
-def read_no_attn(x,x_hat,h_dec_prev):
-    return tf.concat([x,x_hat], 1)
-
-def read_attn(x,x_hat,h_dec_prev):
+def read(x,h_dec_prev):
     Fx,Fy,gamma, gx, gy, delta=attn_window("read",h_dec_prev,read_n)
     stats = Fx, Fy, gamma
     new_stats = gx, gy, delta 
@@ -101,70 +106,27 @@ def read_attn(x,x_hat,h_dec_prev):
         glimpse=tf.matmul(Fy,tf.matmul(img,Fxt))
         glimpse=tf.reshape(glimpse,[-1,N*N])
         return glimpse*tf.reshape(gamma,[-1,1])
-    x=filter_img(x,Fx,Fy,gamma,read_n) # batch x (read_n*read_n)
-    x_hat=filter_img(x_hat,Fx,Fy,gamma,read_n)
-    return tf.concat([x,x_hat], 1), new_stats # concat along feature axis
-    #return x, stats
 
-read = read_attn if FLAGS.read_attn else read_no_attn
+    x=filter_img(x,Fx,Fy,gamma,read_n) # batch x (read_n*read_n)
+    return x, new_stats
 
 ## ENCODE ## 
-def encode(state,input):
+def encode(input, state):
     """
     run LSTM
     state = previous encoder state
     input = cat(read,h_dec_prev)
     returns: (output, new_state)
     """
-    with tf.variable_scope("encoder",reuse=DO_SHARE):
+    with tf.variable_scope("encoder/LSTMCell",reuse=DO_SHARE):
         return lstm_enc(input,state)
 
-## Q-SAMPLER (VARIATIONAL AUTOENCODER) ##
-
-def sampleQ(h_enc):
-    """
-    Samples Zt ~ normrnd(mu,sigma) via reparameterization trick for normal dist
-    mu is (batch,z_size)
-    """
-    with tf.variable_scope("mu",reuse=DO_SHARE):
-        mu=linear(h_enc,z_size)
-    with tf.variable_scope("sigma",reuse=DO_SHARE):
-        logsigma=linear(h_enc,z_size)
-        sigma=tf.exp(logsigma)
-    return (mu + sigma*e, mu, logsigma, sigma)
-
 ## DECODER ## 
-def decode(state,input):
-    with tf.variable_scope("decoder",reuse=DO_SHARE):
+def decode(input, state):
+    with tf.variable_scope("decoder/LSTMCell",reuse=DO_SHARE):
         return lstm_dec(input, state)
 
-## WRITER ## 
-def write_no_attn(h_dec):
-    with tf.variable_scope("write",reuse=DO_SHARE):
-        return linear(h_dec,img_size)
-
-def write_attn(h_dec):
-    with tf.variable_scope("writeW",reuse=DO_SHARE):
-        w=linear(h_dec,write_size) # batch x (write_n*write_n)
-    N=write_n
-    w=tf.reshape(w,[batch_size,N,N])
-    Fx,Fy,gamma, gx, gy, delta=attn_window("write",h_dec,write_n)
-
-    stats = Fx, Fy, gamma
-    new_stats = gx, gy,delta 
-
-    Fyt=tf.transpose(Fy,perm=[0,2,1])
-    wr=tf.matmul(Fyt,tf.matmul(w,Fx))
-    wr=tf.reshape(wr,[batch_size,B*A])
-    #gamma=tf.tile(gamma,[1,B*A])
-    return wr*tf.reshape(1.0/gamma,[-1,1]), new_stats
-
-write=write_attn if FLAGS.write_attn else write_no_attn
-
 ## STATE VARIABLES ## 
-
-cs=[0]*T # sequence of canvases
-mus,logsigmas,sigmas=[0]*T,[0]*T,[0]*T # gaussian params generated by SampleQ. We will need these for computing loss.
 # initial states
 h_dec_prev=tf.zeros((batch_size,dec_size))
 enc_state=lstm_enc.zero_state(batch_size, tf.float32)
@@ -173,58 +135,76 @@ dec_state=lstm_dec.zero_state(batch_size, tf.float32)
 ## DRAW MODEL ## 
 
 viz_data = list()
+pqs = list()
 
 # construct the unrolled computational graph
 for t in range(T):
-    c_prev = tf.zeros((batch_size,img_size)) if t==0 else cs[t-1]
-    x_hat=x-tf.sigmoid(c_prev) # error image
-    r, stats=read(x,x_hat,h_dec_prev)
-    h_enc,enc_state=encode(enc_state,tf.concat([r,h_dec_prev], 1))
-    z,mus[t],logsigmas[t],sigmas[t]=sampleQ(h_enc)
-    h_dec,dec_state=decode(dec_state,z)
+    r, stats = read(x, h_dec_prev)
+   
+    h_enc, enc_state = encode(tf.concat([r, h_dec_prev], 1), enc_state)
 
-    write_output = write(h_dec)
-    write_img, w_stats = write_output
-    cs[t]=c_prev+write_img # store results
+    with tf.variable_scope("z",reuse=DO_SHARE):
+        z = linear(h_enc, z_size)
+    h_dec, dec_state = decode(z, dec_state)
+    h_dec_prev = h_dec
 
-    h_dec_prev=h_dec
+    with tf.variable_scope("hidden1",reuse=DO_SHARE):
+        hidden = tf.nn.relu(linear(h_dec_prev, 256))
+    with tf.variable_scope("output",reuse=DO_SHARE):
+        classification = tf.nn.softmax(linear(hidden, z_size))
+        viz_data.append({
+            "classification": classification,
+            "r": r,
+            "h_dec": h_dec,
+            "stats": stats,
+        })
+
     DO_SHARE=True # from now on, share variables
 
-    viz_data.append({
-        #"stats": stats,
-        "r": r[0, :read_n*read_n],
-        "h_dec": h_dec,
-        "c": cs[t],
-        "stats": w_stats,
-    })
+    pq = tf.log(classification + 1e-5) * onehot_labels
+    pq = tf.reduce_mean(pq, 0)
+    pqs.append(pq)
+
+predquality = tf.reduce_mean(pqs)
+correct = tf.arg_max(onehot_labels, 1)
+prediction = tf.arg_max(classification, 1)
+
+R = tf.cast(tf.equal(correct, prediction), tf.float32)
+
+reward = tf.reduce_mean(R)
+
 
 ## LOSS FUNCTION ## 
 
 def binary_crossentropy(t,o):
     return -(t*tf.log(o+eps) + (1.0-t)*tf.log(1.0-o+eps))
 
-# reconstruction term appears to have been collapsed down to a single scalar value (rather than one per item in minibatch)
-x_recons=tf.nn.sigmoid(cs[-1])
 
-# after computing binary cross entropy, sum across features then take the mean of those sums across minibatches
-Lx=tf.reduce_sum(binary_crossentropy(x,x_recons),1) # reconstruction term
-Lx=tf.reduce_mean(Lx)
+def evaluate():
+    data = load_input.InputData()
+    data.get_test(1)
+    batches_in_epoch = len(data.images) // batch_size
+    accuracy = 0
+    
+    for i in range(batches_in_epoch):
+        nextX, nextY = data.next_batch(batch_size)
+        feed_dict = {x: nextX, onehot_labels:nextY}
+        r = sess.run(reward, feed_dict=feed_dict)
+        accuracy += r
+    
+    accuracy /= batches_in_epoch
 
-kl_terms=[0]*T
-for t in range(T):
-    mu2=tf.square(mus[t])
-    sigma2=tf.square(sigmas[t])
-    logsigma=logsigmas[t]
-    kl_terms[t]=0.5*tf.reduce_sum(mu2+sigma2-2*logsigma,1)-T*.5 # each kl term is (1xminibatch)
-KL=tf.add_n(kl_terms) # this is 1xminibatch, corresponding to summing kl_terms from 1:T
-Lz=tf.reduce_mean(KL) # average over minibatches
+    print("ACCURACY: " + str(accuracy))
+    return accuracy
 
-cost=Lx+Lz
+
+predcost = -predquality
+
 
 ## OPTIMIZER ## 
 
-optimizer=tf.train.AdamOptimizer(learning_rate, beta1=0.5)
-grads=optimizer.compute_gradients(cost)
+optimizer=tf.train.AdamOptimizer(learning_rate, epsilon=1)
+grads=optimizer.compute_gradients(predcost)
 for i,(g,v) in enumerate(grads):
     if g is not None:
         grads[i]=(tf.clip_by_norm(g,5),v) # clip gradients
@@ -232,18 +212,16 @@ train_op=optimizer.apply_gradients(grads)
 
 ## RUN TRAINING ## 
 
-data_directory = os.path.join(FLAGS.data_dir, "mnist")
-if not os.path.exists(data_directory):
-    os.makedirs(data_directory)
-train_data = mnist.input_data.read_data_sets(data_directory, one_hot=True).train # binarized (0-1) mnist data
+#data_directory = os.path.join(FLAGS.data_dir, "mnist")
+#if not os.path.exists(data_directory):
+#    os.makedirs(data_directory)
+#train_data = mnist.input_data.read_data_sets(data_directory, one_hot=True).train # binarized (0-1) mnist data
 
-#train_data = load_input.InputData()
-#train_data.get_train(1)
+train_data = load_input.InputData()
+train_data.get_train()
 
 fetches=[]
-fetches.extend([Lx,Lz,train_op])
-Lxs=[0]*train_iters
-Lzs=[0]*train_iters
+fetches.extend([reward, train_op])
 
 if __name__ == '__main__':
     sess_config = tf.ConfigProto()
@@ -254,7 +232,7 @@ if __name__ == '__main__':
     tf.global_variables_initializer().run()
 
     ## CHANGE THE MODEL SETTINGS HERE #########################
-    model_directory = "model_runs/mnist100glimpses"
+    model_directory = "model_runs/blob_classification"
 
     if not os.path.exists(model_directory):
         os.makedirs(model_directory)
@@ -264,22 +242,25 @@ if __name__ == '__main__':
     #saver.restore(sess, model_directory + "/drawmodel_" + str(start_ckpt) + ".ckpt") # to restore from model, uncomment this line, may need to change filename!!!
 
     for i in range(start_ckpt, train_iters):
-        xtrain,_=train_data.next_batch(batch_size) # xtrain is (batch_size x img_size)
-        feed_dict={x:xtrain}
+        xtrain, ytrain = train_data.next_batch(batch_size) # xtrain is (batch_size x img_size)
+        feed_dict={x:xtrain, onehot_labels: ytrain}
         results=sess.run(fetches,feed_dict)
-        Lxs[i],Lzs[i],_=results
-        if i%1000==0:
-            print("iter=%d : Lx: %f Lz: %f" % (i,Lxs[i],Lzs[i]))
-            if i%10000==0:
-                ## SAVE TRAINING CHECKPOINT ## 
-                canvases=sess.run(cs,feed_dict) # generate some examples
-                canvases=np.array(canvases) # T x batch x img_size
+        if i%100 == 0:
+            print("iter=%d : Reward: %f" % (i, reward_fetched))
+            sys.stdout.flush()
 
-                out_file=os.path.join(FLAGS.data_dir, model_directory + "/draw_data_" + str(i) + ".npy")
-                np.save(out_file,[canvases,Lxs,Lzs])
-                print("Outputs saved in file: %s" % out_file)
-
-                ckpt_file=os.path.join(FLAGS.data_dir, model_directory + "/drawmodel_" + str(i) + ".ckpt")
-                print("Model saved in file: %s" % saver.save(sess,ckpt_file))
+            if i%1000==0:
+                train_data = load_input.InputData()
+                train_data.get_train()
+     
+                if i %10000==0:
+                    ## SAVE TRAINING CHECKPOINT ## 
+                    start_evaluate = time.clock()
+                    test_accuracy = evaluate()
+                    saver = tf.train.Saver(tf.global_variables())
+                    extra_time = extra_time + time.clock() - start_evaluate
+                    print("--- %s CPU seconds ---" % (time.clock() - start_time - extra_time))
+                    ckpt_file=os.path.join(FLAGS.data_dir, model_directory + "/drawmodel_" + str(i) + ".ckpt")
+                    print("Model saved in file: %s" % saver.save(sess,ckpt_file))
 
     sess.close()

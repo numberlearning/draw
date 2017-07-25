@@ -1,0 +1,6 @@
+model_checkpoint_path: "drawmodel_490000.ckpt"
+all_model_checkpoint_paths: "drawmodel_450000.ckpt"
+all_model_checkpoint_paths: "drawmodel_460000.ckpt"
+all_model_checkpoint_paths: "drawmodel_470000.ckpt"
+all_model_checkpoint_paths: "drawmodel_480000.ckpt"
+all_model_checkpoint_paths: "drawmodel_490000.ckpt"

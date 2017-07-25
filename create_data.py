@@ -1,10 +1,10 @@
 import sys
 import numpy as np
 import random
-min_edge = 20
-max_edge = 25
-min_blobs = 0
-max_blobs = 1
+min_edge = 5
+max_edge = 5
+min_blobs = 1
+max_blobs = 9
 n_labels = max_blobs - min_blobs + 1
 
 c = min_blobs

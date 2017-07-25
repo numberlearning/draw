@@ -23,9 +23,15 @@ from analysis import read_img, write_img, T, read_n
 clear_output()
 b = Button(description="Loading...", icon="arrow", width=400)
 dropdown = Dropdown(
-    options=['0', '1000', '2000', '3000', '4000', '5000', '6000', '7000', '8000', '9000', '10000'], 
-    value='1000',
+    options=['0', '1000', '2000', '3000', '4000', '5000', '6000', '7000', '8000', '9000', '10000', '11000', '12000', '13000', '14000', '15000', '100000', '200000', '300000', '400000', '490000', '3474000'], 
+    value='3474000',
     description='Iteration:'
+)
+
+action_dropdown = Dropdown(
+    options=['read', 'write'],
+    value='read',
+    description='Action:'
 )
 
 figures = list()
@@ -39,7 +45,7 @@ def make_figure(color, i):
     i: glimpse number
     """
 
-    w = 28
+    w = 100#28
     name = "Draw"
     title = "%s Glimpse %d" % (name, (i + 1))
     p = figure(x_range=(0, w), y_range=(w, 0), width=200, height=200, tools="", title=title, background_fill_color="#111111")
@@ -128,24 +134,26 @@ def update_figures(handle, new_image=True):
     """Display figures at new iteration number."""
 
     global data
-#     data = read_img(int(dropdown.value), new_image)
-#     print(data["rects"])
-# 
-#     for i, f in enumerate(figures):
-#         picture = f
-#         picture_i, picture_q = iqs[i]
-#         picture_i.data_source.data["image"][0] = data["img"]
-#         picture_q.data_source.data = data["rects"][i]
+    if action_dropdown.value is 'read':
+        data = read_img(int(dropdown.value), new_image)
+    #    print(data["rects"])
 
-    data = write_img(int(dropdown.value), new_image)
-    print(data["rects"])
-    #print(data["c"])
+        for i, f in enumerate(figures):
+            picture = f
+            picture_i, picture_q = iqs[i]
+            picture_i.data_source.data["image"][0] = data["img"]
+            picture_q.data_source.data = data["rects"][i]
 
-    for i, f in enumerate(figures):
-        picture = f
-        picture_i, picture_q = iqs[i]
-        picture_i.data_source.data["image"][0] = data["c"][i]
-        picture_q.data_source.data = data["rects"][i]
+    else:
+        data = write_img(int(dropdown.value), new_image)
+        #print(data["rects"])
+        #print(data["c"])
+
+        for i, f in enumerate(figures):
+            picture = f
+            picture_i, picture_q = iqs[i]
+            picture_i.data_source.data["image"][0] = data["c"][i]
+            picture_q.data_source.data = data["rects"][i]
 
     push_notebook(handle=handle)
     
@@ -168,6 +176,7 @@ def on_change(change):
 
 
 dropdown.observe(on_change)
-display(HBox([b, dropdown]))
+action_dropdown.observe(on_change)
+display(HBox([b, dropdown, action_dropdown]))
 handle = show(row(figures), notebook_handle=True)
 on_click(b)
