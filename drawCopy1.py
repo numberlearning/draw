@@ -13,6 +13,8 @@ import tensorflow as tf
 from tensorflow.examples.tutorials import mnist
 import numpy as np
 import os
+import time
+import sys
 import load_input
 
 tf.flags.DEFINE_string("data_dir", "", "")
@@ -30,9 +32,9 @@ read_n = 10#12 # read glimpse grid width/height
 write_n = 5#12 # write glimpse grid width/height
 read_size = 2*read_n*read_n if FLAGS.read_attn else 2*img_size
 write_size = write_n*write_n if FLAGS.write_attn else img_size
-z_size = 10#2 # QSampler output size
+z_size = 9#10#2 # QSampler output size
 T = 5#100 # MNIST generation sequence length
-batch_size = 1 # training minibatch size
+batch_size = 1#00 # training minibatch size
 train_iters = 500000
 learning_rate = 1e-3 # learning rate for optimizer
 eps = 1e-8 # epsilon for numerical stability
@@ -76,20 +78,22 @@ def attn_window(scope,h_dec,N):
     with tf.variable_scope(scope,reuse=DO_SHARE):
         params=linear(h_dec,5)
     gx_,gy_,log_sigma2,log_delta,log_gamma=tf.split(params,5,1)
-    gx=(A+1)/2*(gx_+1)
-    gy=(B+1)/2*(gy_+1)
-#    if gx > A:
-#        gx = A
-#    if gy > B:
-#        gy = B
-#    if gx < 0:
-#        gx = 0
-#    if gy < 0:
-#        gy = 0
+    gx1=(A+1)/2*(gx_+1)
+    gy1=(B+1)/2*(gy_+1)
+
+    gx = gx1
+    gy = gy1
+#    gx = tf.where(tf.less(gx1, tf.zeros_like(gx1) + A), gx1, tf.zeros_like(gx1) + A)
+#    gx = tf.where(tf.greater(gx1, tf.zeros_like(gx1)), gx1, tf.zeros_like(gx1))
+#    gy = tf.where(tf.less(gy1, tf.zeros_like(gy1) + B), gy1, tf.zeros_like(gy1) + B)
+#    gy = tf.where(tf.greater(gy1, tf.zeros_like(gy1)), gy1, tf.zeros_like(gy1))
 
     sigma2=tf.exp(log_sigma2)
-    delta=(max(A,B)-1)/(N-1)*tf.exp(log_delta) # batch x N
-    # change delta, gx, gy constraints in the future
+    d = (max(A,B)-1)/(N-1)*tf.exp(log_delta) # batch x N
+
+    delta = d
+#    delta = tf.where(tf.less(d, tf.zeros_like(d) + A / read_n), d, tf.zeros_like(d) + A / read_n)
+
     Fx, Fy = filterbank(gx,gy,sigma2,delta,N) 
     gamma = tf.exp(log_gamma)
     return Fx, Fy, gamma, gx, gy, delta
@@ -232,7 +236,7 @@ if __name__ == '__main__':
     tf.global_variables_initializer().run()
 
     ## CHANGE THE MODEL SETTINGS HERE #########################
-    model_directory = "model_runs/blob_classification"
+    model_directory = "model_runs/blob_classification_5_5_0_9"
 
     if not os.path.exists(model_directory):
         os.makedirs(model_directory)
@@ -241,10 +245,14 @@ if __name__ == '__main__':
     #saver.restore(sess, model_directory + "/drawmodel.ckpt") # to restore from model, uncomment this line
     #saver.restore(sess, model_directory + "/drawmodel_" + str(start_ckpt) + ".ckpt") # to restore from model, uncomment this line, may need to change filename!!!
 
+    start_time = time.clock()
+    extra_time = 0
+
     for i in range(start_ckpt, train_iters):
         xtrain, ytrain = train_data.next_batch(batch_size) # xtrain is (batch_size x img_size)
         feed_dict={x:xtrain, onehot_labels: ytrain}
         results=sess.run(fetches,feed_dict)
+        reward_fetched, _ = results
         if i%100 == 0:
             print("iter=%d : Reward: %f" % (i, reward_fetched))
             sys.stdout.flush()

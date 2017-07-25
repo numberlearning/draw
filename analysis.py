@@ -32,8 +32,8 @@ def random_image():
 
 
 def load_checkpoint(it):
-    path = "model_runs/5glimpse_9max_10N"
-    saver.restore(sess, "%s/classifymodel_%d.ckpt" % (path, it))
+    path = "model_runs/blob_classification"
+    saver.restore(sess, "%s/drawmodel_%d.ckpt" % (path, it))
     #saver.restore(sess, "model_runs/mnist/drawmodel_99000.ckpt")
 
 
