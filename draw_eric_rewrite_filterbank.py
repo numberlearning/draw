@@ -71,8 +71,8 @@ def filterbank(gx, gy, sigma2, delta, N):
     
     mu_y = mu_x
     
-    a = tf.reshape(tf.cast(tf.range(dims[0]), tf.float32), [1, 1, -1])
-    b = tf.reshape(tf.cast(tf.range(dims[1]), tf.float32), [1, 1, -1])
+    a = tf.reshape(tf.cast(tf.range(A), tf.float32), [1, 1, -1])
+    b = tf.reshape(tf.cast(tf.range(B), tf.float32), [1, 1, -1])
 
     mu_x = tf.reshape(mu_x, [-1, N, 1])
     mu_y = tf.reshape(mu_y, [-1, N, 1])
@@ -97,15 +97,15 @@ def attn_window(scope,h_dec,N, glimpse):
     log_sigma2=tf.reshape(split[2:2+N], [-1, N])
     log_delta=tf.reshape(split[2+N:2+2*N], [-1, N])
     log_gamma=split[2+2*N]
-    gx=(dims[0]+1)/2*(gx_+1)
-    gy=(dims[1]+1)/2*(gy_+1)
+    gx=(A+1)/2*(gx_+1)
+    gy=(B+1)/2*(gy_+1)
 
-    gx_list[glimpse] = gx
-    gy_list[glimpse] = gy
+    # gx_list[glimpse] = gx
+    # gy_list[glimpse] = gy
 
     #  sigma2=tf.exp(log_sigma2)
     #  delta=(max(dims[0],dims[1])-1)/(N-1)*tf.exp(log_delta) # batch x N
-    dis0=max(dims[0],dims[1])/12
+    dis0=max(A,B)/12
     dis1=linspace(-1,1,9)
     dis2=zeros(8)
     dis3=zeros(8)
@@ -129,8 +129,8 @@ def attn_window(scope,h_dec,N, glimpse):
     sigma2=delta*delta/4 # sigma=delta/2
     delta=[delta] * batch_size
     sigma2=[sigma2] * batch_size
-    delta_list[glimpse] = delta
-    sigma_list[glimpse] = sigma2
+    # delta_list[glimpse] = delta
+    # sigma_list[glimpse] = sigma2
 
     ret = list()
     ret.append(filterbank(gx,gy,sigma2,delta,N)+(tf.exp(log_gamma),))
