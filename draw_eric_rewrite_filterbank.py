@@ -89,7 +89,7 @@ def filterbank(gx, gy, sigma2, delta, N):
 
 
 def attn_window(scope,h_dec,N):
-    with tf.variable_scope(scope,reuse=REUSE):
+    with tf.variable_scope(scope,reuse=DO_SHARE):
         params=linear(h_dec,3+2*N)
     split=tf.split(params, 3+2*N, 1)
     gx_=split[0]
