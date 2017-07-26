@@ -56,7 +56,7 @@ def linear(x,output_dim):
     return tf.matmul(x,w)+b
 
 def filterbank(gx, gy, sigma2, delta, N):
-    grid_i = tf.reshape(tf.cast(tf.range(N), tf.float32), [1, -1])
+    # grid_i = tf.reshape(tf.cast(tf.range(N), tf.float32), [1, -1])
     # mu_x = gx + (grid_i - N / 2 - 0.5) * delta # eq 19
     # mu_y = gy + (grid_i - N / 2 - 0.5) * delta # eq 20
    
@@ -132,10 +132,7 @@ def attn_window(scope,h_dec,N):
     # delta_list[glimpse] = delta
     # sigma_list[glimpse] = sigma2
 
-    ret = list()
-    ret.append(filterbank(gx,gy,sigma2,delta,N)+(tf.exp(log_gamma),))
-    #ret.append((gx, gy, delta))
-    return ret
+    return filterbank(gx,gy,sigma2,delta,N)+(tf.exp(log_gamma),)
 
 ## READ ## 
 def read_no_attn(x,x_hat,h_dec_prev):
