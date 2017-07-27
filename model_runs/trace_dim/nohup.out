@@ -1,0 +1,80 @@
+2017-07-26 11:28:31.741791: W tensorflow/core/platform/cpu_feature_guard.cc:45] The TensorFlow library wasn't compiled to use SSE4.1 instructions, but these are available on your machine and could speed up CPU computations.
+2017-07-26 11:28:31.743968: W tensorflow/core/platform/cpu_feature_guard.cc:45] The TensorFlow library wasn't compiled to use SSE4.2 instructions, but these are available on your machine and could speed up CPU computations.
+2017-07-26 11:28:31.743980: W tensorflow/core/platform/cpu_feature_guard.cc:45] The TensorFlow library wasn't compiled to use AVX instructions, but these are available on your machine and could speed up CPU computations.
+2017-07-26 11:28:31.743985: W tensorflow/core/platform/cpu_feature_guard.cc:45] The TensorFlow library wasn't compiled to use AVX2 instructions, but these are available on your machine and could speed up CPU computations.
+2017-07-26 11:28:31.743989: W tensorflow/core/platform/cpu_feature_guard.cc:45] The TensorFlow library wasn't compiled to use FMA instructions, but these are available on your machine and could speed up CPU computations.
+2017-07-26 11:28:31.766411: E tensorflow/stream_executor/cuda/cuda_driver.cc:405] failed call to cuInit: CUDA_ERROR_NO_DEVICE
+2017-07-26 11:28:31.768573: I tensorflow/stream_executor/cuda/cuda_diagnostics.cc:158] retrieving CUDA diagnostic information for host: psy-pdp-guppy
+2017-07-26 11:28:31.768621: I tensorflow/stream_executor/cuda/cuda_diagnostics.cc:165] hostname: psy-pdp-guppy
+2017-07-26 11:28:31.771581: I tensorflow/stream_executor/cuda/cuda_diagnostics.cc:189] libcuda reported version is: 375.66.0
+2017-07-26 11:28:31.772084: I tensorflow/stream_executor/cuda/cuda_diagnostics.cc:369] driver version file contents: """NVRM version: NVIDIA UNIX x86_64 Kernel Module  375.39  Tue Jan 31 20:47:00 PST 2017
+GCC version:  gcc version 5.4.0 20160609 (Ubuntu 5.4.0-6ubuntu1~16.04.4) 
+"""
+2017-07-26 11:28:31.772113: I tensorflow/stream_executor/cuda/cuda_diagnostics.cc:193] kernel reported version is: 375.39.0
+2017-07-26 11:28:31.772118: E tensorflow/stream_executor/cuda/cuda_diagnostics.cc:303] kernel version 375.39.0 does not match DSO version 375.66.0 -- cannot find working devices in this configuration
+iter=0 : Lx: 5551.560059 Lz: 102.300598
+iter=100 : Lx: -329071.906250 Lz: 1258.973633
+iter=200 : Lx: -262943.812500 Lz: 456.547882
+iter=300 : Lx: -496716.000000 Lz: 600.833496
+iter=400 : Lx: -545533.750000 Lz: 493.545776
+iter=500 : Lx: -452856.468750 Lz: 3948.838135
+iter=600 : Lx: -555029.812500 Lz: 463.721069
+iter=700 : Lx: -572668.187500 Lz: 338.614380
+iter=800 : Lx: -632019.375000 Lz: 277.280853
+iter=900 : Lx: -620428.062500 Lz: 398.366882
+iter=1000 : Lx: -647040.062500 Lz: 298.324554
+iter=1100 : Lx: -540585.937500 Lz: 288.788971
+iter=1200 : Lx: -540260.437500 Lz: 285.538940
+iter=1300 : Lx: -585035.000000 Lz: 417.925201
+iter=1400 : Lx: -607890.312500 Lz: 450.268677
+iter=1500 : Lx: -599104.187500 Lz: 449.209290
+iter=1600 : Lx: -595373.625000 Lz: 575.018494
+iter=1700 : Lx: -623363.187500 Lz: 516.190918
+iter=1800 : Lx: -621289.375000 Lz: 590.936707
+iter=1900 : Lx: -589740.250000 Lz: 769.073730
+iter=2000 : Lx: -643743.375000 Lz: 723.710144
+iter=2100 : Lx: -600668.250000 Lz: 698.178040
+iter=2200 : Lx: -597183.062500 Lz: 780.967590
+iter=2300 : Lx: -625590.062500 Lz: 772.337708
+iter=2400 : Lx: -604910.062500 Lz: 741.034607
+iter=2500 : Lx: -623223.750000 Lz: 614.871826
+iter=2600 : Lx: -644608.375000 Lz: 710.284363
+iter=2700 : Lx: -602866.312500 Lz: 690.563904
+iter=2800 : Lx: -611106.187500 Lz: 619.599121
+iter=2900 : Lx: -613572.812500 Lz: 608.924133
+iter=3000 : Lx: -598651.500000 Lz: 594.695496
+iter=3100 : Lx: -598560.625000 Lz: 592.732605
+iter=3200 : Lx: -617261.812500 Lz: 537.204407
+iter=3300 : Lx: -624014.937500 Lz: 557.420959
+iter=3400 : Lx: -593551.937500 Lz: 567.987549
+iter=3500 : Lx: -570046.687500 Lz: 545.112671
+iter=3600 : Lx: -601409.500000 Lz: 512.927917
+iter=3700 : Lx: -628188.625000 Lz: 512.720154
+iter=3800 : Lx: -609622.500000 Lz: 500.596558
+iter=3900 : Lx: -641265.750000 Lz: 463.404694
+iter=4000 : Lx: -623897.312500 Lz: 532.991089
+iter=4100 : Lx: -616603.312500 Lz: 436.545044
+iter=4200 : Lx: -598654.750000 Lz: 512.841919
+iter=4300 : Lx: -627184.375000 Lz: 485.046173
+iter=4400 : Lx: -595801.312500 Lz: 489.374268
+iter=4500 : Lx: -651968.812500 Lz: 588.011108
+iter=4600 : Lx: -614323.125000 Lz: 499.572723
+iter=4700 : Lx: -621700.187500 Lz: 632.220215
+iter=4800 : Lx: -600626.625000 Lz: 619.533569
+iter=4900 : Lx: -641593.875000 Lz: 667.723816
+iter=5000 : Lx: -637213.187500 Lz: 592.724670
+iter=5100 : Lx: -570665.875000 Lz: 604.003296
+iter=5200 : Lx: -633982.750000 Lz: 543.711914
+iter=5300 : Lx: -609759.625000 Lz: 639.933350
+iter=5400 : Lx: -616797.625000 Lz: 586.207397
+iter=5500 : Lx: -637670.187500 Lz: 575.130676
+iter=5600 : Lx: -606211.750000 Lz: 684.756348
+iter=5700 : Lx: -594427.062500 Lz: 726.139221
+iter=5800 : Lx: -659270.500000 Lz: 732.778809
+iter=5900 : Lx: -628881.500000 Lz: 726.264404
+iter=6000 : Lx: -643743.062500 Lz: 622.155212
+iter=6100 : Lx: -608158.312500 Lz: 612.517639
+iter=6200 : Lx: -591101.375000 Lz: 703.921692
+iter=6300 : Lx: -605875.375000 Lz: 616.502014
+iter=6400 : Lx: -630240.625000 Lz: 609.257019
+iter=6500 : Lx: -629878.500000 Lz: 608.220825

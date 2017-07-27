@@ -48,7 +48,8 @@ def make_figure(color, i):
     w = 100#28
     name = "Draw"
     title = "%s Glimpse %d" % (name, (i + 1))
-    p = figure(x_range=(0, w), y_range=(w, 0), width=200, height=200, tools="", title=title, background_fill_color="#111111")
+    #p = figure(x_range=(0, w), y_range=(w, 0), width=200, height=200, tools="", title=title, background_fill_color="#111111")
+    p = figure(x_range=(0, w), y_range=(w/4, 0), width=200, height=50, tools="", title=title, background_fill_color="#111111")
     
     p.toolbar.logo = None
     p.toolbar_location = None
@@ -59,7 +60,8 @@ def make_figure(color, i):
     im = np.zeros((w, w))
     i_source = ColumnDataSource(data=dict(image=[im]))
 
-    iii = p.image(image=[im], x=0, y=w, dw=w, dh=w, palette="Greys256")#"Spectral9")#"Greys256")
+    #iii = p.image(image=[im], x=0, y=w, dw=w, dh=w, palette="Greys256")#"Spectral9")#"Greys256")
+    iii = p.image(image=[im], x=0, y=w/4, dw=w, dh=w/4, palette="Greys256")#"Spectral9")#"Greys256")
     source = ColumnDataSource(data=dict(top=[0], bottom=[0], left=[0], right=[0]))
     q = p.quad('left', 'right', 'top', 'bottom', source=source, color=color, fill_alpha=0, line_width=3)
     

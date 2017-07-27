@@ -15,7 +15,7 @@ import numpy as np
 from numpy import *
 import os
 
-tf.flags.DEFINE_string("data_dir", "", "")
+tf.flags.DEFINE_string("data_dir", "old_filterbank", "")
 tf.flags.DEFINE_boolean("read_attn", True, "enable attention for reader")
 tf.flags.DEFINE_boolean("write_attn",True, "enable attention for writer")
 FLAGS = tf.flags.FLAGS
@@ -33,7 +33,7 @@ write_size = write_n*write_n if FLAGS.write_attn else img_size
 z_size=10 # QSampler output size
 T=10 # MNIST generation sequence length
 batch_size=100 # training minibatch size
-train_iters=10000
+train_iters=1000
 learning_rate=1e-3 # learning rate for optimizer
 eps=1e-8 # epsilon for numerical stability
 
@@ -55,7 +55,30 @@ def linear(x,output_dim):
     b=tf.get_variable("b", [output_dim], initializer=tf.constant_initializer(0.0))
     return tf.matmul(x,w)+b
 
-def filterbank(gx, gy, sigma2, delta, N):
+
+def filterbank(gx, gy, sigma2,delta, N):
+    """The original filterbank."""
+
+    grid_i = tf.reshape(tf.cast(tf.range(N), tf.float32), [1, -1])
+    mu_x = gx + (grid_i - N / 2 - 0.5) * delta # eq 19
+    mu_y = gy + (grid_i - N / 2 - 0.5) * delta # eq 20
+    a = tf.reshape(tf.cast(tf.range(A), tf.float32), [1, 1, -1])
+    b = tf.reshape(tf.cast(tf.range(B), tf.float32), [1, 1, -1])
+    mu_x = tf.reshape(mu_x, [-1, N, 1])
+    mu_y = tf.reshape(mu_y, [-1, N, 1])
+    sigma2 = tf.reshape(sigma2, [-1, 1, 1])
+    ssigma2 = tf.reshape(sigma2[0], [-1, 1])
+    Fx = tf.exp(-tf.square((a - mu_x) / (2*ssigma2))) # 2*sigma2?
+    Fy = tf.exp(-tf.square((b - mu_y) / (2*ssigma2))) # batch x N x B
+    # normalize, sum over A and B dims
+    Fx=Fx/tf.maximum(tf.reduce_sum(Fx,2,keep_dims=True),eps)
+    Fy=Fy/tf.maximum(tf.reduce_sum(Fy,2,keep_dims=True),eps)
+    return Fx,Fy, mu_x, mu_y
+
+
+def filterbank2(gx, gy, sigma2, delta, N):
+    """The rewritten filterbank."""
+
     # grid_i = tf.reshape(tf.cast(tf.range(N), tf.float32), [1, -1])
     # mu_x = gx + (grid_i - N / 2 - 0.5) * delta # eq 19
     # mu_y = gy + (grid_i - N / 2 - 0.5) * delta # eq 20
@@ -85,7 +108,7 @@ def filterbank(gx, gy, sigma2, delta, N):
     # normalize, sum over A and B dims
     Fx=Fx/tf.maximum(tf.reduce_sum(Fx,2,keep_dims=True),eps)
     Fy=Fy/tf.maximum(tf.reduce_sum(Fy,2,keep_dims=True),eps)
-    return Fx,Fy
+    return Fx,Fy, mu_x, mu_y
 
 
 def attn_window(scope,h_dec,N):
@@ -132,14 +155,17 @@ def attn_window(scope,h_dec,N):
     # delta_list[glimpse] = delta
     # sigma_list[glimpse] = sigma2
 
-    return filterbank(gx,gy,sigma2,delta,N)+(tf.exp(log_gamma),)
+    Fx, Fy, mu_x, mu_y = filterbank(gx, gy, sigma2, delta, N)
+    gamma = tf.exp(log_gamma)
+    #return filterbank(gx,gy,sigma2,delta,N)+(tf.exp(log_gamma),)
+    return Fx, Fy, mu_x, mu_y, gamma
 
 ## READ ## 
 def read_no_attn(x,x_hat,h_dec_prev):
     return tf.concat([x,x_hat], 1)
 
 def read_attn(x,x_hat,h_dec_prev):
-    Fx,Fy,gamma=attn_window("read",h_dec_prev,read_n)
+    Fx,Fy,mu_x, mu_y, gamma=attn_window("read",h_dec_prev,read_n)
     def filter_img(img,Fx,Fy,gamma,N):
         Fxt=tf.transpose(Fx,perm=[0,2,1])
         img=tf.reshape(img,[-1,B,A])
@@ -148,7 +174,7 @@ def read_attn(x,x_hat,h_dec_prev):
         return glimpse*tf.reshape(gamma,[-1,1])
     x=filter_img(x,Fx,Fy,gamma,read_n) # batch x (read_n*read_n)
     x_hat=filter_img(x_hat,Fx,Fy,gamma,read_n)
-    return tf.concat([x,x_hat], 1) # concat along feature axis
+    return tf.concat([x,x_hat], 1), mu_x, mu_y # concat along feature axis
 
 read = read_attn if FLAGS.read_attn else read_no_attn
 
@@ -192,12 +218,12 @@ def write_attn(h_dec):
         w=linear(h_dec,write_size) # batch x (write_n*write_n)
     N=write_n
     w=tf.reshape(w,[batch_size,N,N])
-    Fx,Fy,gamma=attn_window("write",h_dec,write_n)
+    Fx,Fy,mu_x, mu_y, gamma=attn_window("write",h_dec,write_n)
     Fyt=tf.transpose(Fy,perm=[0,2,1])
     wr=tf.matmul(Fyt,tf.matmul(w,Fx))
     wr=tf.reshape(wr,[batch_size,B*A])
     #gamma=tf.tile(gamma,[1,B*A])
-    return wr*tf.reshape(1.0/gamma,[-1,1])
+    return wr*tf.reshape(1.0/gamma,[-1,1]), mu_x, mu_y
 
 write=write_attn if FLAGS.write_attn else write_no_attn
 
@@ -212,17 +238,27 @@ dec_state=lstm_dec.zero_state(batch_size, tf.float32)
 
 ## DRAW MODEL ## 
 
+viz_data = list()
 # construct the unrolled computational graph
 for t in range(T):
     c_prev = tf.zeros((batch_size,img_size)) if t==0 else cs[t-1]
     x_hat=x-tf.sigmoid(c_prev) # error image
-    r=read(x,x_hat,h_dec_prev)
+    r, mu_x, mu_y =read(x,x_hat,h_dec_prev)
     h_enc,enc_state=encode(enc_state,tf.concat([r,h_dec_prev], 1))
     z,mus[t],logsigmas[t],sigmas[t]=sampleQ(h_enc)
     h_dec,dec_state=decode(dec_state,z)
-    cs[t]=c_prev+write(h_dec) # store results
+
+    write_h_dec, mu_x, mu_y = write(h_dec)
+    cs[t]=c_prev+write_h_dec # store results
     h_dec_prev=h_dec
     DO_SHARE=True # from now on, share variables
+    
+    viz_data.append({
+        "mu_x": mu_x,
+        "mu_y": mu_y,
+    })
+
+
 
 ## LOSS FUNCTION ## 
 
@@ -258,40 +294,41 @@ train_op=optimizer.apply_gradients(grads)
 
 ## RUN TRAINING ## 
 
-data_directory = os.path.join(FLAGS.data_dir, "mnist")
-if not os.path.exists(data_directory):
-	os.makedirs(data_directory)
-train_data = mnist.input_data.read_data_sets(data_directory, one_hot=True).train # binarized (0-1) mnist data
+if __name__ == '__main__':
+    data_directory = os.path.join(FLAGS.data_dir, "mnist")
+    if not os.path.exists(data_directory):
+            os.makedirs(data_directory)
+    train_data = mnist.input_data.read_data_sets(data_directory, one_hot=True).train # binarized (0-1) mnist data
 
-fetches=[]
-fetches.extend([Lx,Lz,train_op])
-Lxs=[0]*train_iters
-Lzs=[0]*train_iters
+    fetches=[]
+    fetches.extend([Lx,Lz,train_op])
+    Lxs=[0]*train_iters
+    Lzs=[0]*train_iters
 
-sess=tf.InteractiveSession()
+    sess=tf.InteractiveSession()
 
-saver = tf.train.Saver() # saves variables learned during training
-tf.global_variables_initializer().run()
-#saver.restore(sess, "/tmp/draw/drawmodel.ckpt") # to restore from model, uncomment this line
+    saver = tf.train.Saver() # saves variables learned during training
+    tf.global_variables_initializer().run()
+    #saver.restore(sess, "/tmp/draw/drawmodel.ckpt") # to restore from model, uncomment this line
 
-for i in range(train_iters):
-	xtrain,_=train_data.next_batch(batch_size) # xtrain is (batch_size x img_size)
-	feed_dict={x:xtrain}
-	results=sess.run(fetches,feed_dict)
-	Lxs[i],Lzs[i],_=results
-	if i%100==0:
-		print("iter=%d : Lx: %f Lz: %f" % (i,Lxs[i],Lzs[i]))
+    for i in range(train_iters):
+        xtrain,_=train_data.next_batch(batch_size) # xtrain is (batch_size x img_size)
+        feed_dict={x:xtrain}
+        results=sess.run(fetches,feed_dict)
+        Lxs[i],Lzs[i],_=results
+        if i%100==0:
+            print("iter=%d : Lx: %f Lz: %f" % (i,Lxs[i],Lzs[i]))
 
-## TRAINING FINISHED ## 
+    ## TRAINING FINISHED ## 
 
-canvases=sess.run(cs,feed_dict) # generate some examples
-canvases=np.array(canvases) # T x batch x img_size
+    canvases=sess.run(cs,feed_dict) # generate some examples
+    canvases=np.array(canvases) # T x batch x img_size
 
-out_file=os.path.join(FLAGS.data_dir,"draw_data.npy")
-np.save(out_file,[canvases,Lxs,Lzs])
-print("Outputs saved in file: %s" % out_file)
+    out_file=os.path.join(FLAGS.data_dir,"draw_data.npy")
+    np.save(out_file,[canvases,Lxs,Lzs])
+    print("Outputs saved in file: %s" % out_file)
 
-ckpt_file=os.path.join(FLAGS.data_dir,"drawmodel.ckpt")
-print("Model saved in file: %s" % saver.save(sess,ckpt_file))
+    ckpt_file=os.path.join(FLAGS.data_dir,"drawmodel.ckpt")
+    print("Model saved in file: %s" % saver.save(sess,ckpt_file))
 
-sess.close()
+    sess.close()

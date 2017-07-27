@@ -15,7 +15,7 @@ import numpy as np
 import os
 import time
 import sys
-import load_input
+import load_trace
 
 tf.flags.DEFINE_string("data_dir", "", "")
 tf.flags.DEFINE_boolean("read_attn", True, "enable attention for reader")
@@ -185,7 +185,7 @@ def binary_crossentropy(t,o):
 
 
 def evaluate():
-    data = load_input.InputData()
+    data = load_trace.TraceData()
     data.get_test(1)
     batches_in_epoch = len(data.images) // batch_size
     accuracy = 0
@@ -221,7 +221,7 @@ train_op=optimizer.apply_gradients(grads)
 #    os.makedirs(data_directory)
 #train_data = mnist.input_data.read_data_sets(data_directory, one_hot=True).train # binarized (0-1) mnist data
 
-train_data = load_input.InputData()
+train_data = load_trace.TraceData()
 train_data.get_train()
 
 fetches=[]
@@ -258,7 +258,7 @@ if __name__ == '__main__':
             sys.stdout.flush()
 
             if i%1000==0:
-                train_data = load_input.InputData()
+                train_data = load_trace.TraceData()
                 train_data.get_train()
      
                 if i %10000==0:
