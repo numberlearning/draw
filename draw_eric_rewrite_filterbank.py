@@ -117,8 +117,8 @@ def attn_window(scope,h_dec,N):
     split=tf.split(params, 3+2*N, 1)
     gx_=split[0]
     gy_=split[1]
-    log_sigma2=tf.reshape(split[2:2+N], [-1, N])
-    log_delta=tf.reshape(split[2+N:2+2*N], [-1, N])
+    log_sigma2=tf.transpose(tf.reshape(split[2:2+N], [N, -1]))
+    log_delta=tf.transpose(tf.reshape(split[2+N:2+2*N], [N, -1]))
     log_gamma=split[2+2*N]
     gx=(A+1)/2*(gx_+1)
     gy=(B+1)/2*(gy_+1)
