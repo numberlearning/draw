@@ -1,6 +1,0 @@
-model_checkpoint_path: "drawmodel_170000.ckpt"
-all_model_checkpoint_paths: "drawmodel_130000.ckpt"
-all_model_checkpoint_paths: "drawmodel_140000.ckpt"
-all_model_checkpoint_paths: "drawmodel_150000.ckpt"
-all_model_checkpoint_paths: "drawmodel_160000.ckpt"
-all_model_checkpoint_paths: "drawmodel_170000.ckpt"
