@@ -1,17 +1,17 @@
 #!/usr/bin/env python
 
 """"
-Simple implementation of http://arxiv.org/pdf/1502.04623v2.pdf in TensorFlow
 
+Simple implementation of http://arxiv.org/pdf/1502.04623v2.pdf in TensorFlow
 Example Usage: 
 	python draw.py --data_dir=/tmp/draw --read_attn=True --write_attn=True
-
 Author: Eric Jang
 """
 
 import tensorflow as tf
 from tensorflow.examples.tutorials import mnist
 import numpy as np
+from numpy import *
 import os
 
 tf.flags.DEFINE_string("data_dir", "", "")
@@ -25,12 +25,12 @@ A,B = 28,28 # image width,height
 img_size = B*A # the canvas size
 enc_size = 256 # number of hidden units / output size in LSTM
 dec_size = 256
-read_n = 5 # read glimpse grid width/height
-write_n = 5 # write glimpse grid width/height
+read_n = 25 # read glimpse grid width/height
+write_n = 25 # write glimpse grid width/height
 read_size = 2*read_n*read_n if FLAGS.read_attn else 2*img_size
 write_size = write_n*write_n if FLAGS.write_attn else img_size
 z_size=10 # QSampler output size
-T=100 # MNIST generation sequence length
+T=10 # MNIST generation sequence length
 batch_size=100 # training minibatch size
 train_iters=10000
 learning_rate=1e-3 # learning rate for optimizer
@@ -54,37 +54,84 @@ def linear(x,output_dim):
     b=tf.get_variable("b", [output_dim], initializer=tf.constant_initializer(0.0))
     return tf.matmul(x,w)+b
 
-def filterbank(gx, gy, sigma2,delta, N):
-    grid_i = tf.reshape(tf.cast(tf.range(N), tf.float32), [1, -1])
-    mu_x = gx + (grid_i - N / 2 - 0.5) * delta # eq 19
-    mu_y = gy + (grid_i - N / 2 - 0.5) * delta # eq 20
+def filterbank(gx, gy, sigma2, delta, N):
+    # grid_i = tf.reshape(tf.cast(tf.range(N), tf.float32), [1, -1])
+    # mu_x = gx + (grid_i - N / 2 - 0.5) * delta # eq 19
+    # mu_y = gy + (grid_i - N / 2 - 0.5) * delta # eq 20
+   
+    mu_x = [gx[0] - tf.reduce_sum((delta[0])[0:14])]
+    mu_x = tf.reshape(mu_x, [-1])
+    for i in range(1,14):
+        mu_xx = tf.reshape(gx[0] - tf.reduce_sum((delta[0])[i:14]), [-1])
+        mu_x = tf.concat([mu_x, mu_xx], 0)
+    for i in range(14,25):
+        mu_xx = tf.reshape(gx[0] + tf.reduce_sum((delta[0])[14:i+1]), [-1])
+        mu_x = tf.concat([mu_x, mu_xx], 0)
+    
+    mu_y = mu_x
+    
     a = tf.reshape(tf.cast(tf.range(A), tf.float32), [1, 1, -1])
     b = tf.reshape(tf.cast(tf.range(B), tf.float32), [1, 1, -1])
+
     mu_x = tf.reshape(mu_x, [-1, N, 1])
     mu_y = tf.reshape(mu_y, [-1, N, 1])
-    sigma2 = tf.reshape(sigma2, [-1, 1, 1])
-    Fx = tf.exp(-tf.square((a - mu_x) / (2*sigma2))) # 2*sigma2?
-    Fy = tf.exp(-tf.square((b - mu_y) / (2*sigma2))) # batch x N x B
+    # sigma2 = tf.reshape(sigma2, [-1, 1, 1])
+    ssigma2 = tf.reshape(sigma2[0], [-1,1])
+    Fx = tf.exp(-tf.square((a - mu_x) / (2*ssigma2))) # 2*sigma2?
+    Fy = tf.exp(-tf.square((b - mu_y) / (2*ssigma2))) # batch_size x N x B
+    Fx = tf.reshape([Fx]*batch_size, [batch_size, N, -1])
+    Fy = tf.reshape([Fy]*batch_size, [batch_size, N, -1])
     # normalize, sum over A and B dims
     Fx=Fx/tf.maximum(tf.reduce_sum(Fx,2,keep_dims=True),eps)
     Fy=Fy/tf.maximum(tf.reduce_sum(Fy,2,keep_dims=True),eps)
     return Fx,Fy
 
-gx_list = list()
-gy_list = list()
 
 def attn_window(scope,h_dec,N):
     with tf.variable_scope(scope,reuse=DO_SHARE):
-        params=linear(h_dec,5)
-    # gx_,gy_,log_sigma2,log_delta,log_gamma=tf.split(1,5,params)
-    gx_,gy_,log_sigma2,log_delta,log_gamma=tf.split(params,5,1)
+        params=linear(h_dec,3+2*N)
+    split=tf.split(params, 3+2*N, 1)
+    gx_=split[0]
+    gy_=split[1]
+    log_sigma2=tf.transpose(tf.reshape(split[2:2+N], [N, -1]))
+    log_delta=tf.transpose(tf.reshape(split[2+N:2+2*N], [N, -1]))
+    log_gamma=split[2+2*N]
     gx=(A+1)/2*(gx_+1)
     gy=(B+1)/2*(gy_+1)
-    gx_list.append(gx)
-    gy_list.append(gy)
-    sigma2=tf.exp(log_sigma2)
-    delta=(max(A,B)-1)/(N-1)*tf.exp(log_delta) # batch x N
-    print("delta:",delta)
+
+    # gx_list[glimpse] = gx
+    # gy_list[glimpse] = gy
+
+    #  sigma2=tf.exp(log_sigma2)
+    #  delta=(max(dims[0],dims[1])-1)/(N-1)*tf.exp(log_delta) # batch x N
+    dis0=max(A,B)/12
+    dis1=linspace(-1,1,9)
+    dis2=zeros(8)
+    dis3=zeros(8)
+    for i in range(1,9):
+        dis2[i-1]= -pow(1.25,9-i)
+    for i in range(1,9):
+        dis3[i-1]=pow(1.25,i)
+    
+    dis=np.append(np.append(dis2,dis1),dis3)*dis0
+    
+    delta=zeros(25)
+    for j  in range(1,14):
+        delta[j-1]=dis[j]-dis[j-1]
+    delta[13]=0
+    for j in range(14,25):
+        delta[j]=dis[j]-dis[j-1]
+    
+    tdelta=tf.reshape(tf.cast(tf.convert_to_tensor(delta), tf.float32), [1, -1])
+    delta=tdelta*tf.exp(log_delta[0])
+    
+    sigma2=delta*delta/4 # sigma=delta/2
+    sigma2=sigma2+0.001*tf.reduce_min(sigma2[0,0:12])
+    delta=[delta] * batch_size
+    sigma2=[sigma2] * batch_size
+    # delta_list[glimpse] = delta
+    # sigma_list[glimpse] = sigma2
+
     return filterbank(gx,gy,sigma2,delta,N)+(tf.exp(log_gamma),)
 
 ## READ ## 
@@ -233,22 +280,18 @@ for i in range(train_iters):
 	results=sess.run(fetches,feed_dict)
 	Lxs[i],Lzs[i],_=results
 	if i%100==0:
-                print("gx_list: ")
-                print(sess.run(gx_list, feed_dict))
-                print("gy_list: ")
-                print(sess.run(gy_list, feed_dict))
-               	print("iter=%d : Lx: %f Lz: %f" % (i,Lxs[i],Lzs[i]))
+		print("iter=%d : Lx: %f Lz: %f" % (i,Lxs[i],Lzs[i]))
 
 ## TRAINING FINISHED ## 
 
 canvases=sess.run(cs,feed_dict) # generate some examples
 canvases=np.array(canvases) # T x batch x img_size
 
-out_file=os.path.join(FLAGS.data_dir,"draw_data_100_glimpses_mnist.npy")
+out_file=os.path.join(FLAGS.data_dir,"draw_data.npy")
 np.save(out_file,[canvases,Lxs,Lzs])
 print("Outputs saved in file: %s" % out_file)
 
-ckpt_file=os.path.join(FLAGS.data_dir,"drawmodel_100_glimpses_mnist.ckpt")
+ckpt_file=os.path.join(FLAGS.data_dir,"drawmodel.ckpt")
 print("Model saved in file: %s" % saver.save(sess,ckpt_file))
 
 sess.close()

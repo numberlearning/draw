@@ -31,7 +31,7 @@ read_size = 2*read_n*read_n if FLAGS.read_attn else 2*img_size
 write_size = write_n*write_n if FLAGS.write_attn else img_size
 z_size=10 # QSampler output size
 T=10 # MNIST generation sequence length
-batch_size=1#00 # training minibatch size
+batch_size=100 # training minibatch size
 train_iters=1000
 learning_rate=1e-3 # learning rate for optimizer
 eps=1e-8 # epsilon for numerical stability
@@ -62,14 +62,13 @@ def filterbank(gx, gy, sigma2, delta, N):
     # mu_x = gx + (grid_i - N / 2 - 0.5) * delta # eq 19
     # mu_y = gy + (grid_i - N / 2 - 0.5) * delta # eq 20
    
-    mu_x = [gx[0][0] - tf.reduce_sum((delta[0])[0:14])]
+    mu_x = gx - tf.reduce_sum(delta[0:14])
     for i in range(1,14):
-        mu_xx = tf.reshape(gx[0][0] - tf.reduce_sum((delta[0])[i:14]), [-1])
-        mu_x = tf.concat([mu_x, mu_xx], 0)
+        mu_xx = gx - tf.reduce_sum(delta[i:14])
+        mu_x = tf.concat([mu_x, mu_xx], 1)
     for i in range(14,25):
-        mu_xx = tf.reshape(gx[0][0] + tf.reduce_sum((delta[0])[14:i+1]), [-1])
-        mu_x = tf.concat([mu_x, mu_xx], 0)
-    
+        mu_xx = gx + tf.reduce_sum(delta[14:i+1])
+        mu_x = tf.concat([mu_x, mu_xx], 1)
     mu_y = mu_x
     
     a = tf.reshape(tf.cast(tf.range(A), tf.float32), [1, 1, -1])
@@ -78,11 +77,10 @@ def filterbank(gx, gy, sigma2, delta, N):
     mu_x = tf.reshape(mu_x, [-1, N, 1])
     mu_y = tf.reshape(mu_y, [-1, N, 1])
     # sigma2 = tf.reshape(sigma2, [-1, 1, 1])
-    ssigma2 = tf.reshape(sigma2[0], [-1,1])
-    Fx = tf.exp(-tf.square((a - mu_x) / (2*ssigma2))) # 2*sigma2?
-    Fy = tf.exp(-tf.square((b - mu_y) / (2*ssigma2))) # batch_size x N x B
-    Fx = tf.reshape([Fx]*batch_size, [batch_size, N, -1])
-    Fy = tf.reshape([Fy]*batch_size, [batch_size, N, -1])
+    Fx = tf.exp(-tf.square((a - mu_x) / (2*tf.transpose(sigma2)))) # 2*sigma2?
+    Fy = tf.exp(-tf.square((b - mu_y) / (2*tf.transpose(sigma2)))) # batch_size x N x B
+    # Fx = tf.reshape([Fx]*batch_size, [batch_size, N, -1])
+    # Fy = tf.reshape([Fy]*batch_size, [batch_size, N, -1])
     # normalize, sum over A and B dims
     Fx=Fx/tf.maximum(tf.reduce_sum(Fx,2,keep_dims=True),eps)
     Fy=Fy/tf.maximum(tf.reduce_sum(Fy,2,keep_dims=True),eps)
@@ -129,8 +127,7 @@ def attn_window(scope,h_dec,N):
     
     sigma2=delta*delta/4 # sigma=delta/2
     sigma2=sigma2+0.001*tf.reduce_min(sigma2[0,0:12])
-    delta=[delta] * batch_size
-    sigma2=[sigma2] * batch_size
+
     # delta_list[glimpse] = delta
     # sigma_list[glimpse] = sigma2
 
@@ -222,6 +219,7 @@ viz_data = list()
 for t in range(T):
     c_prev = tf.zeros((batch_size,img_size)) if t==0 else cs[t-1]
     x_hat=x-tf.sigmoid(c_prev) # error image
+
     r, mu_x, mu_y, delta =read(x,x_hat,h_dec_prev)
     h_enc,enc_state=encode(enc_state,tf.concat([r,h_dec_prev], 1))
     z,mus[t],logsigmas[t],sigmas[t]=sampleQ(h_enc)
@@ -273,41 +271,40 @@ train_op=optimizer.apply_gradients(grads)
 
 ## RUN TRAINING ## 
 
-if __name__ == '__main__':
-    data_directory = os.path.join(FLAGS.data_dir, "mnist")
-    if not os.path.exists(data_directory):
-            os.makedirs(data_directory)
-    train_data = mnist.input_data.read_data_sets(data_directory, one_hot=True).train # binarized (0-1) mnist data
+data_directory = os.path.join(FLAGS.data_dir, "mnist")
+if not os.path.exists(data_directory):
+	os.makedirs(data_directory)
+train_data = mnist.input_data.read_data_sets(data_directory, one_hot=True).train # binarized (0-1) mnist data
 
-    fetches=[]
-    fetches.extend([Lx,Lz,train_op])
-    Lxs=[0]*train_iters
-    Lzs=[0]*train_iters
+fetches=[]
+fetches.extend([Lx,Lz,train_op])
+Lxs=[0]*train_iters
+Lzs=[0]*train_iters
 
-    sess=tf.InteractiveSession()
+sess=tf.InteractiveSession()
 
-    saver = tf.train.Saver() # saves variables learned during training
-    tf.global_variables_initializer().run()
-    #saver.restore(sess, "/tmp/draw/drawmodel.ckpt") # to restore from model, uncomment this line
+saver = tf.train.Saver() # saves variables learned during training
+tf.global_variables_initializer().run()
+#saver.restore(sess, "/tmp/draw/drawmodel.ckpt") # to restore from model, uncomment this line
 
-    for i in range(train_iters):
-        xtrain,_=train_data.next_batch(batch_size) # xtrain is (batch_size x img_size)
-        feed_dict={x:xtrain}
-        results=sess.run(fetches,feed_dict)
-        Lxs[i],Lzs[i],_=results
-        if i%100==0:
-            print("iter=%d : Lx: %f Lz: %f" % (i,Lxs[i],Lzs[i]))
+for i in range(train_iters):
+	xtrain,_=train_data.next_batch(batch_size) # xtrain is (batch_size x img_size)
+	feed_dict={x:xtrain}
+	results=sess.run(fetches,feed_dict)
+	Lxs[i],Lzs[i],_=results
+	if i%100==0:
+		print("iter=%d : Lx: %f Lz: %f" % (i,Lxs[i],Lzs[i]))
 
-    ## TRAINING FINISHED ## 
+## TRAINING FINISHED ## 
 
-    canvases=sess.run(cs,feed_dict) # generate some examples
-    canvases=np.array(canvases) # T x batch x img_size
+canvases=sess.run(cs,feed_dict) # generate some examples
+canvases=np.array(canvases) # T x batch x img_size
 
-    out_file=os.path.join(FLAGS.data_dir,"draw_data.npy")
-    np.save(out_file,[canvases,Lxs,Lzs])
-    print("Outputs saved in file: %s" % out_file)
+out_file=os.path.join(FLAGS.data_dir,"draw_data.npy")
+np.save(out_file,[canvases,Lxs,Lzs])
+print("Outputs saved in file: %s" % out_file)
 
-    ckpt_file=os.path.join(FLAGS.data_dir,"drawmodel.ckpt")
-    print("Model saved in file: %s" % saver.save(sess,ckpt_file))
+ckpt_file=os.path.join(FLAGS.data_dir,"drawmodel.ckpt")
+print("Model saved in file: %s" % saver.save(sess,ckpt_file))
 
-    sess.close()
+sess.close()
