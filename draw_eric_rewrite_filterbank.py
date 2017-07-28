@@ -54,7 +54,10 @@ def linear(x,output_dim):
     b=tf.get_variable("b", [output_dim], initializer=tf.constant_initializer(0.0))
     return tf.matmul(x,w)+b
 
+
 def filterbank(gx, gy, sigma2, delta, N):
+    """The rewritten filterbank."""
+
     # grid_i = tf.reshape(tf.cast(tf.range(N), tf.float32), [1, -1])
     # mu_x = gx + (grid_i - N / 2 - 0.5) * delta # eq 19
     # mu_y = gy + (grid_i - N / 2 - 0.5) * delta # eq 20
