@@ -97,11 +97,17 @@ def read_img2(it, new_image):
     for i in range(len(cs)):
         mu_x = cs[i]["mu_x"]
         mu_y = cs[i]["mu_y"]
-        if i == 0:
-            print("mu_x: ")
-            print(mu_x)
-            print("mu_y: ")
-            print(mu_y)
+        delta = cs[i]["delta"]
+        print("glimpse: ", i)
+
+        print("mu_x: ")
+        print(mu_x)
+        print("mu_y: ")
+        print(mu_y)
+
+        print("delta: ")
+        print(delta)
+
         out["dots"].append(list_to_dots(mu_x, mu_y))
 
     return out
