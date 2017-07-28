@@ -30,8 +30,8 @@ write_n = 25 # write glimpse grid width/height
 read_size = 2*read_n*read_n if FLAGS.read_attn else 2*img_size
 write_size = write_n*write_n if FLAGS.write_attn else img_size
 z_size=10 # QSampler output size
-T=10 # MNIST generation sequence length
-batch_size=100 # training minibatch size
+T=11 # MNIST generation sequence length
+batch_size=1 # training minibatch size
 train_iters=1000
 learning_rate=1e-3 # learning rate for optimizer
 eps=1e-8 # epsilon for numerical stability
@@ -62,23 +62,26 @@ def filterbank(gx, gy, sigma2, delta, N):
     # mu_x = gx + (grid_i - N / 2 - 0.5) * delta # eq 19
     # mu_y = gy + (grid_i - N / 2 - 0.5) * delta # eq 20
    
-    mu_x = gx - tf.reduce_sum(delta[0:14])
+    # change 14 in the future (13 is the middle)
+    mu_x = gx - tf.reduce_sum(delta[0][0:14]) # batch_size x 1
     for i in range(1,14):
-        mu_xx = gx - tf.reduce_sum(delta[i:14])
+        mu_xx = gx - tf.reduce_sum(delta[0][i:14])
         mu_x = tf.concat([mu_x, mu_xx], 1)
     for i in range(14,25):
-        mu_xx = gx + tf.reduce_sum(delta[14:i+1])
+        mu_xx = gx + tf.reduce_sum(delta[0][14:i+1])
         mu_x = tf.concat([mu_x, mu_xx], 1)
-    mu_y = mu_x
-    
-    a = tf.reshape(tf.cast(tf.range(A), tf.float32), [1, 1, -1])
-    b = tf.reshape(tf.cast(tf.range(B), tf.float32), [1, 1, -1])
 
-    mu_x = tf.reshape(mu_x, [-1, N, 1])
+    mu_y = mu_x # batch_size x N
+    
+    a = tf.reshape(tf.cast(tf.range(A), tf.float32), [1, 1, -1]) # 1 x 1 x A
+    b = tf.reshape(tf.cast(tf.range(B), tf.float32), [1, 1, -1]) # 1 x 1 x B
+
+    mu_x = tf.reshape(mu_x, [-1, N, 1]) # batch_size x N x 1
     mu_y = tf.reshape(mu_y, [-1, N, 1])
-    # sigma2 = tf.reshape(sigma2, [-1, 1, 1])
-    Fx = tf.exp(-tf.square((a - mu_x) / (2*tf.transpose(sigma2)))) # 2*sigma2?
-    Fy = tf.exp(-tf.square((b - mu_y) / (2*tf.transpose(sigma2)))) # batch_size x N x B
+
+    sigma2 = tf.transpose(sigma2[0])
+    Fx = tf.exp(-tf.square((a - mu_x) / (2*sigma2))) # 2*sigma2?
+    Fy = tf.exp(-tf.square((b - mu_y) / (2*sigma2))) # batch_size x N x B
     # Fx = tf.reshape([Fx]*batch_size, [batch_size, N, -1])
     # Fy = tf.reshape([Fy]*batch_size, [batch_size, N, -1])
     # normalize, sum over A and B dims
@@ -91,9 +94,9 @@ def attn_window(scope,h_dec,N):
     with tf.variable_scope(scope,reuse=DO_SHARE):
         params=linear(h_dec,3+2*N)
     split=tf.split(params, 3+2*N, 1)
-    gx_=split[0]
+    gx_=split[0] # batch_size x 1
     gy_=split[1]
-    log_sigma2=tf.transpose(tf.reshape(split[2:2+N], [N, -1]))
+    log_sigma2=tf.transpose(tf.reshape(split[2:2+N], [N, -1])) # batch_size x N
     log_delta=tf.transpose(tf.reshape(split[2+N:2+2*N], [N, -1]))
     log_gamma=split[2+2*N]
     gx=(A+1)/2*(gx_+1)
@@ -123,11 +126,13 @@ def attn_window(scope,h_dec,N):
         delta[j]=dis[j]-dis[j-1]
     
     tdelta=tf.reshape(tf.cast(tf.convert_to_tensor(delta), tf.float32), [1, -1])
-    delta=tdelta*tf.exp(log_delta[0])
+    delta=tdelta*tf.exp(log_delta[0]) # 1 x N
     
     sigma2=delta*delta/4 # sigma=delta/2
-    sigma2=sigma2+0.001*tf.reduce_min(sigma2[0,0:12])
-
+    sigma2=sigma2+0.001*tf.reduce_min(sigma2[0,0:12]) # 1 x N
+    
+    delta=[delta]*batch_size
+    sigma2=[sigma2]*batch_size
     # delta_list[glimpse] = delta
     # sigma_list[glimpse] = sigma2
 
@@ -281,30 +286,33 @@ fetches.extend([Lx,Lz,train_op])
 Lxs=[0]*train_iters
 Lzs=[0]*train_iters
 
-sess=tf.InteractiveSession()
+if __name__ == '__main__':
+    sess_config = tf.ConfigProto()
+    sess_config.gpu_options.allow_growth = True
+    sess=tf.InteractiveSession()
 
-saver = tf.train.Saver() # saves variables learned during training
-tf.global_variables_initializer().run()
-#saver.restore(sess, "/tmp/draw/drawmodel.ckpt") # to restore from model, uncomment this line
+    saver = tf.train.Saver() # saves variables learned during training
+    tf.global_variables_initializer().run()
+    #saver.restore(sess, "/tmp/draw/drawmodel.ckpt") # to restore from model, uncomment this line
 
-for i in range(train_iters):
-	xtrain,_=train_data.next_batch(batch_size) # xtrain is (batch_size x img_size)
-	feed_dict={x:xtrain}
-	results=sess.run(fetches,feed_dict)
-	Lxs[i],Lzs[i],_=results
-	if i%100==0:
-		print("iter=%d : Lx: %f Lz: %f" % (i,Lxs[i],Lzs[i]))
+    for i in range(train_iters):
+            xtrain,_=train_data.next_batch(batch_size) # xtrain is (batch_size x img_size)
+            feed_dict={x:xtrain}
+            results=sess.run(fetches,feed_dict)
+            Lxs[i],Lzs[i],_=results
+            if i%100==0:
+                    print("iter=%d : Lx: %f Lz: %f" % (i,Lxs[i],Lzs[i]))
 
-## TRAINING FINISHED ## 
+    ## TRAINING FINISHED ## 
 
-canvases=sess.run(cs,feed_dict) # generate some examples
-canvases=np.array(canvases) # T x batch x img_size
+    canvases=sess.run(cs,feed_dict) # generate some examples
+    canvases=np.array(canvases) # T x batch x img_size
 
-out_file=os.path.join(FLAGS.data_dir,"draw_data.npy")
-np.save(out_file,[canvases,Lxs,Lzs])
-print("Outputs saved in file: %s" % out_file)
+    out_file=os.path.join(FLAGS.data_dir,"draw_data.npy")
+    np.save(out_file,[canvases,Lxs,Lzs])
+    print("Outputs saved in file: %s" % out_file)
 
-ckpt_file=os.path.join(FLAGS.data_dir,"drawmodel.ckpt")
-print("Model saved in file: %s" % saver.save(sess,ckpt_file))
+    ckpt_file=os.path.join(FLAGS.data_dir,"drawmodel.ckpt")
+    print("Model saved in file: %s" % saver.save(sess,ckpt_file))
 
-sess.close()
+    sess.close()
