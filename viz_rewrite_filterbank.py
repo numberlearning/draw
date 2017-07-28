@@ -55,14 +55,14 @@ def make_figure(color, i):
     p.axis.visible = False
     p.border_fill_color = "#111111"
     p.title.text_color = "#DDDDDD"
-
-    dots_source = ColumnDataSource(data=dict(mu_x_list=[0], mu_y_list=[0]))
-    d = p.circle("mu_x_list", "mu_y_list", source=dots_source, size=5, color="orange", alpha=0.5)
-
     im = np.zeros((w, w))
     i_source = ColumnDataSource(data=dict(image=[im]))
 
     iii = p.image(image=[im], x=0, y=w, dw=w, dh=w, palette="Greys256")#"Spectral9")#"Greys256")
+
+    dots_source = ColumnDataSource(data=dict(mu_x_list=[0]*625, mu_y_list=[0]*625))
+    d = p.circle("mu_x_list", "mu_y_list", source=dots_source, size=1, color="orange", alpha=0.5)
+
 
     return p, iii, d;
 
@@ -83,15 +83,12 @@ def update_figures(handle, new_image=True):
     global data
     if action_dropdown.value is 'read':
         data = read_img2(int(dropdown.value), new_image)
-    #    print(data["rects"])
 
         for i, f in enumerate(figures):
             picture = f
-            #picture_i, picture_q = iqs[i]
             picture_i, picture_d = ids[i]
             picture_i.data_source.data["image"][0] = data["img"]
-            #picture_q.data_source.data = data["rects"][i]
-            #print(data["dots"][i])
+            #print(data["dots"][i]['mu_x_list'])
             picture_d.data_source.data = data["dots"][i]
 
     else:
