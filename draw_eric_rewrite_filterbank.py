@@ -79,9 +79,8 @@ def filterbank(gx, gy, sigma2, delta, N):
     mu_x = tf.reshape(mu_x, [-1, N, 1]) # batch_size x N x 1
     mu_y = tf.reshape(mu_y, [-1, N, 1])
 
-    sigma2 = tf.transpose(sigma2[0])
-    Fx = tf.exp(-tf.square((a - mu_x) / (2*sigma2))) # 2*sigma2?
-    Fy = tf.exp(-tf.square((b - mu_y) / (2*sigma2))) # batch_size x N x B
+    Fx = tf.exp(-tf.square((a - mu_x) / (2*tf.transpose(sigma2)))) # 2*sigma2?
+    Fy = tf.exp(-tf.square((b - mu_y) / (2*tf.transpose(sigma2)))) # batch_size x N x B
     # Fx = tf.reshape([Fx]*batch_size, [batch_size, N, -1])
     # Fy = tf.reshape([Fy]*batch_size, [batch_size, N, -1])
     # normalize, sum over A and B dims
@@ -112,9 +111,9 @@ def attn_window(scope,h_dec,N):
     dis2=zeros(8)
     dis3=zeros(8)
     for i in range(1,9):
-        dis2[i-1]= -pow(1.25,9-i)
+        dis2[i-1] = -pow(1.25,9-i)
     for i in range(1,9):
-        dis3[i-1]=pow(1.25,i)
+        dis3[i-1] = pow(1.25,i)
     
     dis=np.append(np.append(dis2,dis1),dis3)*dis0
     
@@ -131,8 +130,8 @@ def attn_window(scope,h_dec,N):
     sigma2=delta*delta/4 # sigma=delta/2
     sigma2=sigma2+0.001*tf.reduce_min(sigma2[0,0:12]) # 1 x N
     
-    delta=[delta]*batch_size
-    sigma2=[sigma2]*batch_size
+    # delta=[delta]*batch_size
+    # sigma2=[sigma2]*batch_size
     # delta_list[glimpse] = delta
     # sigma_list[glimpse] = sigma2
 
