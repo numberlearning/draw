@@ -109,9 +109,9 @@ def attn_window(scope,h_dec,N):
     dis2=zeros(8)
     dis3=zeros(8)
     for i in range(1,9):
-        dis2[i-1]= -pow(1.25,9-i)
+        dis2[i-1] = -pow(1.25,9-i)
     for i in range(1,9):
-        dis3[i-1]=pow(1.25,i)
+        dis3[i-1] = pow(1.25,i)
     
     dis=np.append(np.append(dis2,dis1),dis3)*dis0
     
