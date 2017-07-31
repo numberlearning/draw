@@ -29,12 +29,12 @@ read_n = 25 # read glimpse grid width/height
 write_n = 25 # write glimpse grid width/height
 read_size = 2*read_n*read_n if FLAGS.read_attn else 2*img_size
 write_size = write_n*write_n if FLAGS.write_attn else img_size
-z_size=10 # QSampler output size
-T=11 # MNIST generation sequence length
-batch_size=1 # training minibatch size
-train_iters=1000
-learning_rate=1e-3 # learning rate for optimizer
-eps=1e-8 # epsilon for numerical stability
+z_size = 10 # QSampler output size
+T = 11 # MNIST generation sequence length
+batch_size = 1#00 # training minibatch size
+train_iters = 1000
+learning_rate = 1e-3 # learning rate for optimizer
+eps = 1e-8 # epsilon for numerical stability
 
 ## BUILD MODEL ## 
 
@@ -63,12 +63,12 @@ def filterbank(gx, gy, sigma2, delta, N):
     # mu_y = gy + (grid_i - N / 2 - 0.5) * delta # eq 20
    
     # change 14 in the future (13 is the middle)
-    mu_x = gx - tf.reduce_sum(delta[0][0:14]) # batch_size x 1
-    for i in range(1,14):
-        mu_xx = gx - tf.reduce_sum(delta[0][i:14])
+    mu_x = gx - tf.reduce_sum(delta[0][0:13]) # batch_size x 1
+    for i in range(1,13):
+        mu_xx = gx - tf.reduce_sum(delta[0][i:13])
         mu_x = tf.concat([mu_x, mu_xx], 1)
-    for i in range(14,25):
-        mu_xx = gx + tf.reduce_sum(delta[0][14:i+1])
+    for i in range(13,25):
+        mu_xx = gx + tf.reduce_sum(delta[0][13:i+1])
         mu_x = tf.concat([mu_x, mu_xx], 1)
 
     mu_y = mu_x # batch_size x N
@@ -79,9 +79,11 @@ def filterbank(gx, gy, sigma2, delta, N):
     mu_x = tf.reshape(mu_x, [-1, N, 1]) # batch_size x N x 1
     mu_y = tf.reshape(mu_y, [-1, N, 1])
 
-    sigma2 = tf.transpose(sigma2[0])
-    Fx = tf.exp(-tf.square((a - mu_x) / (2*sigma2))) # 2*sigma2?
-    Fy = tf.exp(-tf.square((b - mu_y) / (2*sigma2))) # batch_size x N x B
+    sigma2 = tf.reshape(sigma2, [-1, 1, 1])
+    Fx = tf.exp(tf.reshape(-tf.square(a - mu_x), [-1, 1, A]) / (2*sigma2)) # 2*sigma2?
+    Fy = tf.exp(tf.reshape(-tf.square(b - mu_y), [-1, 1, B]) / (2*sigma2)) # batch_size x N x B
+    Fx = tf.reshape(Fx, [batch_size, N, A])
+    Fy = tf.reshape(Fy, [batch_size, N, B])
     # Fx = tf.reshape([Fx]*batch_size, [batch_size, N, -1])
     # Fy = tf.reshape([Fy]*batch_size, [batch_size, N, -1])
     # normalize, sum over A and B dims
@@ -92,13 +94,8 @@ def filterbank(gx, gy, sigma2, delta, N):
 
 def attn_window(scope,h_dec,N):
     with tf.variable_scope(scope,reuse=DO_SHARE):
-        params=linear(h_dec,3+2*N)
-    split=tf.split(params, 3+2*N, 1)
-    gx_=split[0] # batch_size x 1
-    gy_=split[1]
-    log_sigma2=tf.transpose(tf.reshape(split[2:2+N], [N, -1])) # batch_size x N
-    log_delta=tf.transpose(tf.reshape(split[2+N:2+2*N], [N, -1]))
-    log_gamma=split[2+2*N]
+        params=linear(h_dec,4)
+    gx_,gy_,log_delta,log_gamma=tf.split(params, 4, 1)
     gx=(A+1)/2*(gx_+1)
     gy=(B+1)/2*(gy_+1)
 
@@ -119,20 +116,18 @@ def attn_window(scope,h_dec,N):
     dis=np.append(np.append(dis2,dis1),dis3)*dis0
     
     delta=zeros(25)
-    for j  in range(1,14):
+    for j  in range(1,13):
         delta[j-1]=dis[j]-dis[j-1]
-    delta[13]=0
-    for j in range(14,25):
+    delta[12]=0
+    for j in range(13,25):
         delta[j]=dis[j]-dis[j-1]
     
     tdelta=tf.reshape(tf.cast(tf.convert_to_tensor(delta), tf.float32), [1, -1])
-    delta=tdelta*tf.exp(log_delta[0]) # 1 x N
+    delta=tdelta*tf.exp(log_delta) # batch_size  x N
     
     sigma2=delta*delta/4 # sigma=delta/2
-    sigma2=sigma2+0.001*tf.reduce_min(sigma2[0,0:12]) # 1 x N
+    sigma2=sigma2+0.001*tf.reshape(tf.reduce_min(sigma2[:,0:12],1), [-1, 1]) # batch_size x N
     
-    delta=[delta]*batch_size
-    sigma2=[sigma2]*batch_size
     # delta_list[glimpse] = delta
     # sigma_list[glimpse] = sigma2
 
@@ -225,20 +220,30 @@ for t in range(T):
     c_prev = tf.zeros((batch_size,img_size)) if t==0 else cs[t-1]
     x_hat=x-tf.sigmoid(c_prev) # error image
 
-    r, mu_x, mu_y, delta =read(x,x_hat,h_dec_prev)
+    r, r_mu_x, r_mu_y, r_delta =read(x,x_hat,h_dec_prev)
     h_enc,enc_state=encode(enc_state,tf.concat([r,h_dec_prev], 1))
     z,mus[t],logsigmas[t],sigmas[t]=sampleQ(h_enc)
     h_dec,dec_state=decode(dec_state,z)
 
-    write_h_dec, mu_x, mu_y, delta = write(h_dec)
+    write_h_dec, w_mu_x, w_mu_y, w_delta = write(h_dec)
     cs[t]=c_prev+write_h_dec # store results
+    #cs[t]=c_prev+write(h_dec) # store results
     h_dec_prev=h_dec
     DO_SHARE=True # from now on, share variables
 
+    # mu_y has dimensions of batch_size x N x 1 ?
+    # delta has dimensions of batch_size x 1 x N ?
     viz_data.append({
-        "mu_x": mu_x,
-        "mu_y": mu_y,
-        "delta": delta,
+        # READ
+        "mu_x": tf.squeeze(r_mu_x, [0, 2]), # batch_size x N
+        "mu_y": tf.squeeze(r_mu_y, [0, 2]),
+        #"delta": tf.squeeze(r_delta, [0, 1]), # batch_size x N
+        "delta": r_delta[0], # batch_size x N
+
+        # WRITE
+        "w_mu_x": tf.squeeze(w_mu_x, [0, 2]), # batch_size x N
+        "w_mu_y": tf.squeeze(w_mu_y, [0, 2]),
+        "w_delta": w_delta[0], # batch_size x N
     })
 
 
