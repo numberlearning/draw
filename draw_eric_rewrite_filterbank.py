@@ -288,18 +288,18 @@ for i,(g,v) in enumerate(grads):
 train_op=optimizer.apply_gradients(grads)
 
 ## RUN TRAINING ## 
-
-data_directory = os.path.join(FLAGS.data_dir, "mnist")
-if not os.path.exists(data_directory):
-	os.makedirs(data_directory)
-train_data = mnist.input_data.read_data_sets(data_directory, one_hot=True).train # binarized (0-1) mnist data
-
 fetches=[]
 fetches.extend([Lx,Lz,train_op])
 Lxs=[0]*train_iters
 Lzs=[0]*train_iters
 
 if __name__ == '__main__':
+
+    data_directory = os.path.join(FLAGS.data_dir, "mnist")
+    if not os.path.exists(data_directory):
+            os.makedirs(data_directory)
+    train_data = mnist.input_data.read_data_sets(data_directory, one_hot=True).train # binarized (0-1) mnist data
+
     sess_config = tf.ConfigProto()
     sess_config.gpu_options.allow_growth = True
     sess=tf.InteractiveSession()
