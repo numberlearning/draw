@@ -18,7 +18,7 @@ import numpy as np
 
 from bokeh.charts import Bar, Histogram
 
-from analysis import read_img, read_img2, write_img, T, read_n
+from analysis import read_img, read_img2, write_img, write_img2, T, read_n
 
 clear_output()
 b = Button(description="Loading...", icon="arrow", width=400)
@@ -92,15 +92,15 @@ def update_figures(handle, new_image=True):
             picture_d.data_source.data = data["dots"][i]
 
     else:
-        data = write_img(int(dropdown.value), new_image)
+        data = write_img2(int(dropdown.value), new_image)
         #print(data["rects"])
         #print(data["c"])
 
         for i, f in enumerate(figures):
             picture = f
-            picture_i, picture_q = iqs[i]
+            picture_i, picture_d = ids[i]
             picture_i.data_source.data["image"][0] = data["c"][i]
-            picture_q.data_source.data = data["rects"][i]
+            picture_d.data_source.data = data["dots"][i]
 
     push_notebook(handle=handle)
     
