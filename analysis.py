@@ -183,19 +183,6 @@ def write_img2(it, new_image):
         mu_x = list(cs[i]["w_mu_x"])
         mu_y = list(cs[i]["w_mu_y"])
         delta = list(cs[i]["w_delta"])
-        print("glimpse: ", i)
-
-        print("mu_x: ")
-        print(mu_x)
-        print(np.array(mu_x).shape)
-        print("mu_y: ")
-        print(mu_y)
-        print(np.array(mu_y).shape)
-
-        print("delta: ")
-        print(delta)
-        print(np.array(delta).shape)
-
         out["dots"].append(list_to_dots(mu_x, mu_y))
 
     return out
