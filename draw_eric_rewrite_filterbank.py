@@ -14,7 +14,7 @@ import numpy as np
 from numpy import *
 import os
 
-tf.flags.DEFINE_string("data_dir", "model_runs/rewrite_filterbank", "")
+tf.flags.DEFINE_string("data_dir", "model_runs/more_viz_data", "")
 tf.flags.DEFINE_boolean("read_attn", True, "enable attention for reader")
 tf.flags.DEFINE_boolean("write_attn",True, "enable attention for writer")
 FLAGS = tf.flags.FLAGS
@@ -96,7 +96,7 @@ def attn_window(scope,h_dec,N):
     with tf.variable_scope(scope,reuse=DO_SHARE):
         params=linear(h_dec,4)
     gx_,gy_,log_delta,log_gamma=tf.split(params, 4, 1)
-    gx=(A+1)/2*(gx_+1)
+    gx=(A+1)/2*(gx_+1) # batch_size x 1
     gy=(B+1)/2*(gy_+1)
 
     # gx_list[glimpse] = gx
@@ -235,14 +235,13 @@ for t in range(T):
     # delta has dimensions of batch_size x 1 x N ?
     viz_data.append({
         # READ
-        "mu_x": tf.squeeze(r_mu_x, 2)[0], # batch_size x N
-        "mu_y": tf.squeeze(r_mu_y, 2)[0],
-        #"delta": tf.squeeze(r_delta, [0, 1]), # batch_size x N
-        "delta": r_delta[0], # batch_size x N
+        "r_mu_x": tf.squeeze(r_mu_x, 2)[0], # batch_size x N
+        "r_mu_y": tf.squeeze(r_mu_y, 2)[0],
+        "r_delta": r_delta[0], # batch_size x N
 
-        "gx_": tf.squeeze(r_gx_, 2)[0], # batch_size x N
-        "gy_": tf.squeeze(r_gy_, 2)[0],
-        "sigma2": r_sigma2[0], # batch_size x N
+        "r_gx_": tf.squeeze(r_gx_, 1)[0], # batch_size x N
+        "r_gy_": tf.squeeze(r_gy_, 1)[0],
+        "r_sigma2": r_sigma2[0], # batch_size x N
 
         # WRITE
         "w_mu_x": tf.squeeze(w_mu_x, 2)[0], # batch_size x N
@@ -250,8 +249,8 @@ for t in range(T):
         "w_delta": w_delta[0], # batch_size x N
         "c": cs[t],
 
-        "w_gx_": tf.squeeze(w_gx_, 2)[0], # batch_size x N
-        "w_gy_": tf.squeeze(w_gy_, 2)[0],
+        "w_gx_": tf.squeeze(w_gx_, 1)[0], # batch_size x N
+        "w_gy_": tf.squeeze(w_gy_, 1)[0],
         "w_sigma2": w_sigma2[0], # batch_size x N
     })
 

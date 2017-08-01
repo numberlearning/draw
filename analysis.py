@@ -95,11 +95,26 @@ def read_img2(it, new_image):
     cs = sess.run(viz_data, feed_dict={x: img.reshape(batch_size, A*B)})
 
     for i in range(len(cs)):
-        mu_x = list(cs[i]["mu_x"])
-        mu_y = list(cs[i]["mu_y"])
-        delta = list(cs[i]["delta"])
-        #print("glimpse: ", i)
+        mu_x = list(cs[i]["r_mu_x"])
+        mu_y = list(cs[i]["r_mu_y"])
+        delta = list(cs[i]["r_delta"])
+        gx_ = cs[i]["r_gx_"]
+        gy_ = cs[i]["r_gy_"]
+        sigma2 = list(cs[i]["r_sigma2"])
+        print("glimpse: ", i)
 
+        print("gx_: ")
+        print(gx_)
+        print(np.array(gx_).shape)
+
+        print("gy_: ")
+        print(gy_)
+        print(np.array(gy_).shape)
+
+        print("sigma2: ")
+        print(sigma2)
+        print(np.array(sigma2).shape)
+        
         #print("mu_x: ")
         #mu_x = [  1.60994053,   4.36969948,   6.57750702,   8.34375381,   9.75675106,
         #        10.8871479,   11.79146671,  12.51492119,  13.09368515,  13.67244816,
@@ -180,11 +195,29 @@ def write_img2(it, new_image):
 
     for i in range(len(cs)):
         out["c"].append(np.flip(cs[i]["c"].reshape(A, B), 0))
+
         mu_x = list(cs[i]["w_mu_x"])
         mu_y = list(cs[i]["w_mu_y"])
         delta = list(cs[i]["w_delta"])
         out["dots"].append(list_to_dots(mu_x, mu_y))
 
+        gx_ = cs[i]["w_gx_"]
+        gy_ = cs[i]["w_gy_"]
+        sigma2 = list(cs[i]["w_sigma2"])
+
+        print("glimpse: ", i)
+
+        print("gx_: ")
+        print(gx_)
+        print(np.array(gx_).shape)
+
+        print("gy_: ")
+        print(gy_)
+        print(np.array(gy_).shape)
+
+        print("sigma2: ")
+        print(sigma2)
+        print(np.array(sigma2).shape)
     return out
 
 
