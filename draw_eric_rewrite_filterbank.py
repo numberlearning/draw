@@ -41,7 +41,7 @@ eps = 1e-8 # epsilon for numerical stability
 DO_SHARE=None # workaround for variable_scope(reuse=True)
 
 x = tf.placeholder(tf.float32,shape=(batch_size,img_size)) # input (batch_size * img_size)
-e=tf.random_normal((batch_size,z_size), mean=0, stddev=1) # Qsampler noise
+e = tf.random_normal((batch_size,z_size), mean=0, stddev=1) # Qsampler noise
 lstm_enc = tf.contrib.rnn.LSTMCell(enc_size, state_is_tuple=True) # encoder Op
 lstm_dec = tf.contrib.rnn.LSTMCell(dec_size, state_is_tuple=True) # decoder Op
 
@@ -134,14 +134,14 @@ def attn_window(scope,h_dec,N):
     Fx, Fy, mu_x, mu_y = filterbank(gx, gy, sigma2, delta, N)
     gamma = tf.exp(log_gamma)
     #return filterbank(gx,gy,sigma2,delta,N)+(tf.exp(log_gamma),)
-    return Fx, Fy, mu_x, mu_y, delta, gamma
+    return Fx, Fy, mu_x, mu_y, delta, gamma, gx_, gy_, sigma2
 
 ## READ ## 
 def read_no_attn(x,x_hat,h_dec_prev):
     return tf.concat([x,x_hat], 1)
 
 def read_attn(x,x_hat,h_dec_prev):
-    Fx,Fy, mu_x, mu_y, delta, gamma=attn_window("read",h_dec_prev,read_n)
+    Fx,Fy, mu_x, mu_y, delta, gamma, gx_, gy_, sigma2=attn_window("read",h_dec_prev,read_n)
     def filter_img(img,Fx,Fy,gamma,N):
         Fxt=tf.transpose(Fx,perm=[0,2,1])
         img=tf.reshape(img,[-1,B,A])
@@ -150,7 +150,7 @@ def read_attn(x,x_hat,h_dec_prev):
         return glimpse*tf.reshape(gamma,[-1,1])
     x=filter_img(x,Fx,Fy,gamma,read_n) # batch x (read_n*read_n)
     x_hat=filter_img(x_hat,Fx,Fy,gamma,read_n)
-    return tf.concat([x,x_hat], 1), mu_x, mu_y, delta # concat along feature axis
+    return tf.concat([x,x_hat], 1), mu_x, mu_y, delta, gx_, gy_, sigma2 # concat along feature axis
 
 read = read_attn if FLAGS.read_attn else read_no_attn
 
@@ -194,12 +194,12 @@ def write_attn(h_dec):
         w=linear(h_dec,write_size) # batch x (write_n*write_n)
     N=write_n
     w=tf.reshape(w,[batch_size,N,N])
-    Fx,Fy,mu_x, mu_y, delta, gamma=attn_window("write",h_dec,write_n)
+    Fx,Fy,mu_x, mu_y, delta, gamma, gx_, gy_, sigma2=attn_window("write",h_dec,write_n)
     Fyt=tf.transpose(Fy,perm=[0,2,1])
     wr=tf.matmul(Fyt,tf.matmul(w,Fx))
     wr=tf.reshape(wr,[batch_size,B*A])
     #gamma=tf.tile(gamma,[1,B*A])
-    return wr*tf.reshape(1.0/gamma,[-1,1]), mu_x, mu_y, delta
+    return wr*tf.reshape(1.0/gamma,[-1,1]), mu_x, mu_y, delta, gx_, gy_, sigma2
 
 write=write_attn if FLAGS.write_attn else write_no_attn
 
@@ -220,12 +220,12 @@ for t in range(T):
     c_prev = tf.zeros((batch_size,img_size)) if t==0 else cs[t-1]
     x_hat=x-tf.sigmoid(c_prev) # error image
 
-    r, r_mu_x, r_mu_y, r_delta =read(x,x_hat,h_dec_prev)
+    r, r_mu_x, r_mu_y, r_delta, r_gx_, r_gy_, r_sigma2 =read(x,x_hat,h_dec_prev)
     h_enc,enc_state=encode(enc_state,tf.concat([r,h_dec_prev], 1))
     z,mus[t],logsigmas[t],sigmas[t]=sampleQ(h_enc)
     h_dec,dec_state=decode(dec_state,z)
 
-    write_h_dec, w_mu_x, w_mu_y, w_delta = write(h_dec)
+    write_h_dec, w_mu_x, w_mu_y, w_delta, w_gx_, w_gy_, w_sigma2 = write(h_dec)
     cs[t]=c_prev+write_h_dec # store results
     #cs[t]=c_prev+write(h_dec) # store results
     h_dec_prev=h_dec
@@ -240,11 +240,19 @@ for t in range(T):
         #"delta": tf.squeeze(r_delta, [0, 1]), # batch_size x N
         "delta": r_delta[0], # batch_size x N
 
+        "gx_": tf.squeeze(r_gx_, 2)[0], # batch_size x N
+        "gy_": tf.squeeze(r_gy_, 2)[0],
+        "sigma2": r_sigma2[0], # batch_size x N
+
         # WRITE
         "w_mu_x": tf.squeeze(w_mu_x, 2)[0], # batch_size x N
         "w_mu_y": tf.squeeze(w_mu_y, 2)[0],
         "w_delta": w_delta[0], # batch_size x N
         "c": cs[t],
+
+        "w_gx_": tf.squeeze(w_gx_, 2)[0], # batch_size x N
+        "w_gy_": tf.squeeze(w_gy_, 2)[0],
+        "w_sigma2": w_sigma2[0], # batch_size x N
     })
 
 
