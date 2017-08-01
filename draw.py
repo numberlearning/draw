@@ -14,7 +14,7 @@ from tensorflow.examples.tutorials import mnist
 import numpy as np
 import os
 
-tf.flags.DEFINE_string("data_dir", "", "")
+tf.flags.DEFINE_string("data_dir", "old_filterbank", "")
 tf.flags.DEFINE_boolean("read_attn", True, "enable attention for reader")
 tf.flags.DEFINE_boolean("write_attn",True, "enable attention for writer")
 FLAGS = tf.flags.FLAGS
@@ -30,8 +30,8 @@ write_n = 5 # write glimpse grid width/height
 read_size = 2*read_n*read_n if FLAGS.read_attn else 2*img_size
 write_size = write_n*write_n if FLAGS.write_attn else img_size
 z_size=10 # QSampler output size
-T=100 # MNIST generation sequence length
-batch_size=100 # training minibatch size
+T=10 # MNIST generation sequence length
+batch_size=1#00 # training minibatch size
 train_iters=10000
 learning_rate=1e-3 # learning rate for optimizer
 eps=1e-8 # epsilon for numerical stability
@@ -174,7 +174,7 @@ viz_data = list()
 for t in range(T):
     c_prev = tf.zeros((batch_size,img_size)) if t==0 else cs[t-1]
     x_hat=x-tf.sigmoid(c_prev) # error image
-    r, mu_x, mu_y =read(x,x_hat,h_dec_prev)
+    r, r_mu_x, r_mu_y =read(x,x_hat,h_dec_prev)
     h_enc,enc_state=encode(enc_state,tf.concat([r,h_dec_prev], 1))
     z,mus[t],logsigmas[t],sigmas[t]=sampleQ(h_enc)
     h_dec,dec_state=decode(dec_state,z)
@@ -182,6 +182,17 @@ for t in range(T):
     cs[t]=c_prev+write_h_dec # store results
     h_dec_prev=h_dec
     DO_SHARE=True # from now on, share variables
+    viz_data.append({
+        # READ
+        "r_mu_x": tf.squeeze(r_mu_x, 2)[0], # batch_size x N
+        "r_mu_y": tf.squeeze(r_mu_y, 2)[0],
+
+        # WRITE
+        "w_mu_x": tf.squeeze(w_mu_x, 2)[0], # batch_size x N
+        "w_mu_y": tf.squeeze(w_mu_y, 2)[0],
+        "c": cs[t],
+    })
+
 
 ## LOSS FUNCTION ## 
 
@@ -216,45 +227,42 @@ for i,(g,v) in enumerate(grads):
 train_op=optimizer.apply_gradients(grads)
 
 ## RUN TRAINING ## 
-
-data_directory = os.path.join(FLAGS.data_dir, "mnist")
-if not os.path.exists(data_directory):
-	os.makedirs(data_directory)
-train_data = mnist.input_data.read_data_sets(data_directory, one_hot=True).train # binarized (0-1) mnist data
-
 fetches=[]
 fetches.extend([Lx,Lz,train_op])
 Lxs=[0]*train_iters
 Lzs=[0]*train_iters
 
-sess=tf.InteractiveSession()
+if __name__ == '__main__':
 
-saver = tf.train.Saver() # saves variables learned during training
-tf.global_variables_initializer().run()
-#saver.restore(sess, "/tmp/draw/drawmodel.ckpt") # to restore from model, uncomment this line
+    data_directory = os.path.join(FLAGS.data_dir, "mnist")
+    if not os.path.exists(data_directory):
+            os.makedirs(data_directory)
+    train_data = mnist.input_data.read_data_sets(data_directory, one_hot=True).train # binarized (0-1) mnist data
 
-for i in range(train_iters):
-	xtrain,_=train_data.next_batch(batch_size) # xtrain is (batch_size x img_size)
-	feed_dict={x:xtrain}
-	results=sess.run(fetches,feed_dict)
-	Lxs[i],Lzs[i],_=results
-	if i%100==0:
-                print("gx_list: ")
-                print(sess.run(gx_list, feed_dict))
-                print("gy_list: ")
-                print(sess.run(gy_list, feed_dict))
-               	print("iter=%d : Lx: %f Lz: %f" % (i,Lxs[i],Lzs[i]))
+    sess_config = tf.ConfigProto()
+    sess_config.gpu_options.allow_growth = True
+    sess=tf.InteractiveSession()
 
-## TRAINING FINISHED ## 
+    saver = tf.train.Saver() # saves variables learned during training
+    tf.global_variables_initializer().run()
+    #saver.restore(sess, "/tmp/draw/drawmodel.ckpt") # to restore from model, uncomment this line
 
-canvases=sess.run(cs,feed_dict) # generate some examples
-canvases=np.array(canvases) # T x batch x img_size
+    for i in range(train_iters):
+            xtrain,_=train_data.next_batch(batch_size) # xtrain is (batch_size x img_size)
+            feed_dict={x:xtrain}
+            results=sess.run(fetches,feed_dict)
+            Lxs[i],Lzs[i],_=results
+            if i%100==0:
+                    print("iter=%d : Lx: %f Lz: %f" % (i,Lxs[i],Lzs[i]))
 
-out_file=os.path.join(FLAGS.data_dir,"draw_data_100_glimpses_mnist.npy")
-np.save(out_file,[canvases,Lxs,Lzs])
-print("Outputs saved in file: %s" % out_file)
+    ## TRAINING FINISHED ## 
 
-ckpt_file=os.path.join(FLAGS.data_dir,"drawmodel_100_glimpses_mnist.ckpt")
-print("Model saved in file: %s" % saver.save(sess,ckpt_file))
+    canvases=sess.run(cs,feed_dict) # generate some examples
+    canvases=np.array(canvases) # T x batch x img_size
 
-sess.close()
+    out_file=os.path.join(FLAGS.data_dir,"draw_data.npy")
+    np.save(out_file,[canvases,Lxs,Lzs])
+    print("Outputs saved in file: %s" % out_file)
+
+    ckpt_file=os.path.join(FLAGS.data_dir,"drawmodel.ckpt")
+    print("Model saved in file: %s" % saver.save(sess,ckpt_file))

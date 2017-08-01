@@ -1,0 +1,151 @@
+delta: Tensor("mul_2:0", shape=(100, 1), dtype=float32)
+delta: Tensor("mul_12:0", shape=(100, 1), dtype=float32)
+delta: Tensor("mul_20:0", shape=(100, 1), dtype=float32)
+delta: Tensor("mul_30:0", shape=(100, 1), dtype=float32)
+delta: Tensor("mul_38:0", shape=(100, 1), dtype=float32)
+delta: Tensor("mul_48:0", shape=(100, 1), dtype=float32)
+delta: Tensor("mul_56:0", shape=(100, 1), dtype=float32)
+delta: Tensor("mul_66:0", shape=(100, 1), dtype=float32)
+delta: Tensor("mul_74:0", shape=(100, 1), dtype=float32)
+delta: Tensor("mul_84:0", shape=(100, 1), dtype=float32)
+delta: Tensor("mul_92:0", shape=(100, 1), dtype=float32)
+delta: Tensor("mul_102:0", shape=(100, 1), dtype=float32)
+delta: Tensor("mul_110:0", shape=(100, 1), dtype=float32)
+delta: Tensor("mul_120:0", shape=(100, 1), dtype=float32)
+delta: Tensor("mul_128:0", shape=(100, 1), dtype=float32)
+delta: Tensor("mul_138:0", shape=(100, 1), dtype=float32)
+delta: Tensor("mul_146:0", shape=(100, 1), dtype=float32)
+delta: Tensor("mul_156:0", shape=(100, 1), dtype=float32)
+delta: Tensor("mul_164:0", shape=(100, 1), dtype=float32)
+delta: Tensor("mul_174:0", shape=(100, 1), dtype=float32)
+Extracting old_filterbank/mnist/train-images-idx3-ubyte.gz
+Extracting old_filterbank/mnist/train-labels-idx1-ubyte.gz
+Extracting old_filterbank/mnist/t10k-images-idx3-ubyte.gz
+Extracting old_filterbank/mnist/t10k-labels-idx1-ubyte.gz
+2017-08-01 11:32:22.117744: W tensorflow/core/platform/cpu_feature_guard.cc:45] The TensorFlow library wasn't compiled to use SSE4.1 instructions, but these are available on your machine and could speed up CPU computations.
+2017-08-01 11:32:22.117771: W tensorflow/core/platform/cpu_feature_guard.cc:45] The TensorFlow library wasn't compiled to use SSE4.2 instructions, but these are available on your machine and could speed up CPU computations.
+2017-08-01 11:32:22.117775: W tensorflow/core/platform/cpu_feature_guard.cc:45] The TensorFlow library wasn't compiled to use AVX instructions, but these are available on your machine and could speed up CPU computations.
+2017-08-01 11:32:22.117778: W tensorflow/core/platform/cpu_feature_guard.cc:45] The TensorFlow library wasn't compiled to use AVX2 instructions, but these are available on your machine and could speed up CPU computations.
+2017-08-01 11:32:22.117781: W tensorflow/core/platform/cpu_feature_guard.cc:45] The TensorFlow library wasn't compiled to use FMA instructions, but these are available on your machine and could speed up CPU computations.
+2017-08-01 11:32:22.226484: I tensorflow/stream_executor/cuda/cuda_gpu_executor.cc:901] successful NUMA node read from SysFS had negative value (-1), but there must be at least one NUMA node, so returning NUMA node zero
+2017-08-01 11:32:22.226907: I tensorflow/core/common_runtime/gpu/gpu_device.cc:887] Found device 0 with properties: 
+name: GeForce GTX 1080
+major: 6 minor: 1 memoryClockRate (GHz) 1.898
+pciBusID 0000:01:00.0
+Total memory: 7.92GiB
+Free memory: 4.15GiB
+2017-08-01 11:32:22.227006: W tensorflow/stream_executor/cuda/cuda_driver.cc:485] creating context when one is currently active; existing: 0x6c359c0
+2017-08-01 11:32:22.328813: I tensorflow/stream_executor/cuda/cuda_gpu_executor.cc:901] successful NUMA node read from SysFS had negative value (-1), but there must be at least one NUMA node, so returning NUMA node zero
+2017-08-01 11:32:22.329163: I tensorflow/core/common_runtime/gpu/gpu_device.cc:887] Found device 1 with properties: 
+name: GeForce GTX 1080
+major: 6 minor: 1 memoryClockRate (GHz) 1.898
+pciBusID 0000:02:00.0
+Total memory: 7.92GiB
+Free memory: 6.39GiB
+2017-08-01 11:32:22.329333: I tensorflow/core/common_runtime/gpu/gpu_device.cc:908] DMA: 0 1 
+2017-08-01 11:32:22.329341: I tensorflow/core/common_runtime/gpu/gpu_device.cc:918] 0:   Y Y 
+2017-08-01 11:32:22.329346: I tensorflow/core/common_runtime/gpu/gpu_device.cc:918] 1:   Y Y 
+2017-08-01 11:32:22.329354: I tensorflow/core/common_runtime/gpu/gpu_device.cc:977] Creating TensorFlow device (/gpu:0) -> (device: 0, name: GeForce GTX 1080, pci bus id: 0000:01:00.0)
+2017-08-01 11:32:22.329360: I tensorflow/core/common_runtime/gpu/gpu_device.cc:977] Creating TensorFlow device (/gpu:1) -> (device: 1, name: GeForce GTX 1080, pci bus id: 0000:02:00.0)
+iter=0 : Lx: 544.079102 Lz: 46.676712
+iter=100 : Lx: 219.285339 Lz: 50.487518
+iter=200 : Lx: 206.427750 Lz: 48.347809
+iter=300 : Lx: 203.176270 Lz: 46.968948
+iter=400 : Lx: 193.551132 Lz: 48.612183
+iter=500 : Lx: 166.814270 Lz: 49.443962
+iter=600 : Lx: 153.868576 Lz: 49.498268
+iter=700 : Lx: 155.783707 Lz: 49.796928
+iter=800 : Lx: 144.507401 Lz: 50.764786
+iter=900 : Lx: 133.354416 Lz: 50.136314
+iter=1000 : Lx: 128.284546 Lz: 50.059540
+iter=1100 : Lx: 121.077927 Lz: 50.195789
+iter=1200 : Lx: 114.561592 Lz: 49.977371
+iter=1300 : Lx: 101.517975 Lz: 49.059540
+iter=1400 : Lx: 107.237518 Lz: 49.850571
+iter=1500 : Lx: 104.029587 Lz: 49.487190
+iter=1600 : Lx: 98.473953 Lz: 49.062595
+iter=1700 : Lx: 92.594429 Lz: 48.790794
+iter=1800 : Lx: 100.690849 Lz: 49.189907
+iter=1900 : Lx: 95.251144 Lz: 48.532410
+iter=2000 : Lx: 88.959671 Lz: 48.067242
+iter=2100 : Lx: 87.705566 Lz: 48.091988
+iter=2200 : Lx: 89.067001 Lz: 48.286247
+iter=2300 : Lx: 88.585472 Lz: 47.800354
+iter=2400 : Lx: 85.430862 Lz: 47.795689
+iter=2500 : Lx: 82.628036 Lz: 47.705399
+iter=2600 : Lx: 78.074265 Lz: 47.506840
+iter=2700 : Lx: 78.876755 Lz: 47.657143
+iter=2800 : Lx: 80.057251 Lz: 47.651737
+iter=2900 : Lx: 74.160713 Lz: 47.193424
+iter=3000 : Lx: 74.981689 Lz: 47.188915
+iter=3100 : Lx: 73.836571 Lz: 47.216404
+iter=3200 : Lx: 74.031509 Lz: 47.255585
+iter=3300 : Lx: 75.048370 Lz: 46.994129
+iter=3400 : Lx: 74.761345 Lz: 47.143631
+iter=3500 : Lx: 73.171997 Lz: 46.983459
+iter=3600 : Lx: 75.313538 Lz: 46.987610
+iter=3700 : Lx: 68.285233 Lz: 46.865585
+iter=3800 : Lx: 71.593079 Lz: 46.903229
+iter=3900 : Lx: 72.220978 Lz: 47.068924
+iter=4000 : Lx: 66.995720 Lz: 46.715843
+iter=4100 : Lx: 71.588196 Lz: 46.825771
+iter=4200 : Lx: 72.050041 Lz: 46.783634
+iter=4300 : Lx: 69.303093 Lz: 46.675694
+iter=4400 : Lx: 66.856323 Lz: 46.622192
+iter=4500 : Lx: 67.327652 Lz: 46.535160
+iter=4600 : Lx: 66.467819 Lz: 46.701683
+iter=4700 : Lx: 66.871941 Lz: 46.497475
+iter=4800 : Lx: 65.923851 Lz: 46.560921
+iter=4900 : Lx: 67.551239 Lz: 46.546486
+iter=5000 : Lx: 61.954002 Lz: 46.515865
+iter=5100 : Lx: 64.380066 Lz: 46.427444
+iter=5200 : Lx: 64.894798 Lz: 46.450462
+iter=5300 : Lx: 68.627312 Lz: 46.391159
+iter=5400 : Lx: 65.146500 Lz: 46.390999
+iter=5500 : Lx: 62.833317 Lz: 46.296448
+iter=5600 : Lx: 60.907246 Lz: 46.290943
+iter=5700 : Lx: 64.677826 Lz: 46.257561
+iter=5800 : Lx: 68.166519 Lz: 46.286903
+iter=5900 : Lx: 65.271362 Lz: 46.376648
+iter=6000 : Lx: 62.072868 Lz: 46.241188
+iter=6100 : Lx: 63.380913 Lz: 46.244102
+iter=6200 : Lx: 63.600662 Lz: 46.118031
+iter=6300 : Lx: 63.613976 Lz: 46.244133
+iter=6400 : Lx: 62.856064 Lz: 46.152191
+iter=6500 : Lx: 59.391994 Lz: 46.164639
+iter=6600 : Lx: 62.554497 Lz: 46.116669
+iter=6700 : Lx: 59.677120 Lz: 46.059296
+iter=6800 : Lx: 61.632118 Lz: 46.057930
+iter=6900 : Lx: 66.646774 Lz: 46.170971
+iter=7000 : Lx: 61.630135 Lz: 46.087093
+iter=7100 : Lx: 61.546989 Lz: 46.079231
+iter=7200 : Lx: 61.495598 Lz: 45.961411
+iter=7300 : Lx: 61.194401 Lz: 46.077980
+iter=7400 : Lx: 60.550880 Lz: 46.033516
+iter=7500 : Lx: 59.421478 Lz: 46.027481
+iter=7600 : Lx: 61.917118 Lz: 45.995861
+iter=7700 : Lx: 58.673752 Lz: 45.922974
+iter=7800 : Lx: 60.855270 Lz: 46.008186
+iter=7900 : Lx: 58.515118 Lz: 45.960865
+iter=8000 : Lx: 59.415436 Lz: 45.927383
+iter=8100 : Lx: 59.393448 Lz: 45.958187
+iter=8200 : Lx: 58.261253 Lz: 45.805454
+iter=8300 : Lx: 57.067142 Lz: 45.874760
+iter=8400 : Lx: 56.254036 Lz: 45.866867
+iter=8500 : Lx: 56.594917 Lz: 45.849773
+iter=8600 : Lx: 55.349731 Lz: 45.833023
+iter=8700 : Lx: 56.818058 Lz: 45.838860
+iter=8800 : Lx: 62.093086 Lz: 45.917763
+iter=8900 : Lx: 57.634773 Lz: 45.794632
+iter=9000 : Lx: 58.128937 Lz: 45.785713
+iter=9100 : Lx: 58.765068 Lz: 45.833725
+iter=9200 : Lx: 56.975330 Lz: 45.827850
+iter=9300 : Lx: 59.889542 Lz: 45.811462
+iter=9400 : Lx: 57.107353 Lz: 45.740555
+iter=9500 : Lx: 56.539200 Lz: 45.755970
+iter=9600 : Lx: 60.346924 Lz: 45.894581
+iter=9700 : Lx: 56.424599 Lz: 45.773598
+iter=9800 : Lx: 57.041397 Lz: 45.752850
+iter=9900 : Lx: 55.223759 Lz: 45.773342
+Outputs saved in file: old_filterbank/draw_data.npy
+Model saved in file: old_filterbank/drawmodel.ckpt
