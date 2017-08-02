@@ -63,29 +63,30 @@ def filterbank(gx, gy, sigma2, delta, N):
     # mu_y = gy + (grid_i - N / 2 - 0.5) * delta # eq 20
    
     # change 14 in the future (13 is the middle)
-    mu_x = gx - tf.reduce_sum(delta[0][0:13]) # batch_size x 1
+    mu_x = gx - tf.reduce_sum(delta[0][0:13])
     for i in range(1,13):
         mu_xx = gx - tf.reduce_sum(delta[0][i:13])
         mu_x = tf.concat([mu_x, mu_xx], 1)
     for i in range(13,25):
         mu_xx = gx + tf.reduce_sum(delta[0][13:i+1])
         mu_x = tf.concat([mu_x, mu_xx], 1)
-
-    mu_y = mu_x # batch_size x N
     
-    a = tf.reshape(tf.cast(tf.range(A), tf.float32), [1, 1, -1]) # 1 x 1 x A
-    b = tf.reshape(tf.cast(tf.range(B), tf.float32), [1, 1, -1]) # 1 x 1 x B
+    mu_y = gy - tf.reduce_sum(delta[0][0:13])
+    for i in range(1,13):
+        mu_yy = gy - tf.reduce_sum(delta[0][i:13])
+        mu_y = tf.concat([mu_y, mu_yy], 1)
+    for i in range(13,25):
+        mu_yy = gy + tf.reduce_sum(delta[0][13:i+1])
+        mu_y = tf.concat([mu_y, mu_yy], 1)
+    
+    a = tf.reshape(tf.cast(tf.range(dims[0]), tf.float32), [1, 1, -1]) # 1 x 1 x dims[0]
+    b = tf.reshape(tf.cast(tf.range(dims[1]), tf.float32), [1, 1, -1]) # 1 x 1 x dims[1] 
 
     mu_x = tf.reshape(mu_x, [-1, N, 1]) # batch_size x N x 1
     mu_y = tf.reshape(mu_y, [-1, N, 1])
-
-    sigma2 = tf.reshape(sigma2, [-1, 1, 1])
-    Fx = tf.exp(tf.reshape(-tf.square(a - mu_x), [-1, 1, A]) / (2*sigma2)) # 2*sigma2?
-    Fy = tf.exp(tf.reshape(-tf.square(b - mu_y), [-1, 1, B]) / (2*sigma2)) # batch_size x N x B
-    Fx = tf.reshape(Fx, [batch_size, N, A])
-    Fy = tf.reshape(Fy, [batch_size, N, B])
-    # Fx = tf.reshape([Fx]*batch_size, [batch_size, N, -1])
-    # Fy = tf.reshape([Fy]*batch_size, [batch_size, N, -1])
+    sigma2 = tf.reshape(sigma2, [-1, N, 1]) # batch_size x N x 1
+    Fx = tf.exp(-tf.square((a - mu_x) / (2*sigma2))) # batch_size x N x dims[0]
+    Fy = tf.exp(-tf.square((b - mu_y) / (2*sigma2))) # batch_size x N x dims[1]
     # normalize, sum over A and B dims
     Fx=Fx/tf.maximum(tf.reduce_sum(Fx,2,keep_dims=True),eps)
     Fy=Fy/tf.maximum(tf.reduce_sum(Fy,2,keep_dims=True),eps)
@@ -126,7 +127,11 @@ def attn_window(scope,h_dec,N):
     delta=tdelta*tf.exp(log_delta) # batch_size  x N
     
     sigma2=delta*delta/4 # sigma=delta/2
-    sigma2=sigma2+0.001*tf.reshape(tf.reduce_min(sigma2[:,0:12],1), [-1, 1]) # batch_size x N
+    ss=tf.cast(tf.convert_to_tensor(zeros(12)), tf.float32)
+    ss=tf.reshape([ss]*batch_size, [batch_size, -1])
+    smin=tf.reshape(tf.reduce_min(sigma2[:,0:12], 1), [-1, 1])
+    ss_=tf.concat([tf.concat([ss,smin/2],1),ss],1)
+    sigma2=sigma2+ss_  # batch_size x N
     
     # delta_list[glimpse] = delta
     # sigma_list[glimpse] = sigma2
