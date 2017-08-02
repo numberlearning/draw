@@ -68,10 +68,10 @@ def make_figure(color, i):
 
 
 for i in range(T):
-    if True:#i % 2 == 0:
-        (p1, i1, d1) = make_figure("pink", i)
-        figures.append(p1)
-        ids.append((i1, d1))
+#    if (i + 1) % 5 == 0:
+    (p1, i1, d1) = make_figure("pink", i)
+    figures.append(p1)
+    ids.append((i1, d1))
 
         
 data = None

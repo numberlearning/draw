@@ -9,10 +9,10 @@ import random
 from scipy import misc
 import time
 import sys
-from draw import viz_data, x, A, B, read_n, T
+#from draw import viz_data, x, A, B, read_n, T
 #from drawCopy1 import viz_data, x, A, B, read_n, T
 #from draw_eric import viz_data, x, A, B, read_n, T
-#from draw_eric_rewrite_filterbank import viz_data, x, A, B, read_n, T
+from draw_eric_rewrite_filterbank import viz_data, x, A, B, read_n, T
 #import load_input
 #import load_trace
 
@@ -43,7 +43,7 @@ def load_checkpoint(it):
     #path = "model_runs/blob_classification"
     #saver.restore(sess, "%s/drawmodel_%d.ckpt" % (path, it))
     #saver.restore(sess, "trace_draw/drawmodel.ckpt")
-    saver.restore(sess, "model_runs/old_filterbank/drawmodel.ckpt")
+    saver.restore(sess, "model_runs/rewrite_filterbank/drawmodel.ckpt")
 #    saver.restore(sess, "model_runs/rewrite_filterbank/drawmodel.ckpt")
 
 
@@ -99,25 +99,25 @@ def read_img2(it, new_image):
     for i in range(len(cs)):
         mu_x = list(cs[i]["r_mu_x"])
         mu_y = list(cs[i]["r_mu_y"])
-#        delta = list(cs[i]["r_delta"])
-#        gx_ = cs[i]["r_gx_"]
-#        gy_ = cs[i]["r_gy_"]
+        delta = list(cs[i]["r_delta"])
+        gx_ = cs[i]["r_gx_"]
+        gy_ = cs[i]["r_gy_"]
 #        sigma2 = list(cs[i]["r_sigma2"])
 #        print("glimpse: ", i)
 #
-#        print("gx_: ")
-#        print(gx_)
-#
-#        print("gy_: ")
-#        print(gy_)
-#
+        print("gx_: ")
+        print(gx_)
+
+        print("gy_: ")
+        print(gy_)
+
 #        print("sigma2: ")
 #        print(sigma2)
 #
-#        print("delta: ")
-#        print(delta)
-#        print("")
-#        
+        print("delta: ")
+        print(delta)
+        print("")
+        
         out["dots"].append(list_to_dots(mu_x, mu_y))
 
     return out

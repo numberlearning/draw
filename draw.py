@@ -14,7 +14,7 @@ from tensorflow.examples.tutorials import mnist
 import numpy as np
 import os
 
-tf.flags.DEFINE_string("data_dir", "old_filterbank", "")
+tf.flags.DEFINE_string("data_dir", "model_runs/old_filterbank_50_glimpse", "")
 tf.flags.DEFINE_boolean("read_attn", True, "enable attention for reader")
 tf.flags.DEFINE_boolean("write_attn",True, "enable attention for writer")
 FLAGS = tf.flags.FLAGS
@@ -30,9 +30,9 @@ write_n = 5 # write glimpse grid width/height
 read_size = 2*read_n*read_n if FLAGS.read_attn else 2*img_size
 write_size = write_n*write_n if FLAGS.write_attn else img_size
 z_size=10 # QSampler output size
-T=10 # MNIST generation sequence length
+T = 50 # MNIST generation sequence length
 batch_size=1#00 # training minibatch size
-train_iters=10000
+train_iters = 10000
 learning_rate=1e-3 # learning rate for optimizer
 eps=1e-8 # epsilon for numerical stability
 
@@ -88,14 +88,14 @@ def attn_window(scope,h_dec,N):
     Fx, Fy, mu_x, mu_y = filterbank(gx, gy, sigma2, delta, N)
     gamma = tf.exp(log_gamma)
     #return filterbank(gx,gy,sigma2,delta,N)+(tf.exp(log_gamma),)
-    return Fx, Fy, mu_x, mu_y, gamma
+    return Fx, Fy, mu_x, mu_y, gamma, gx_, gy_, delta
 
 ## READ ## 
 def read_no_attn(x,x_hat,h_dec_prev):
     return tf.concat([x,x_hat], 1)
 
 def read_attn(x,x_hat,h_dec_prev):
-    Fx,Fy,mu_x, mu_y, gamma=attn_window("read",h_dec_prev,read_n)
+    Fx,Fy,mu_x, mu_y, gamma, gx_, gy_, delta = attn_window("read",h_dec_prev,read_n)
     def filter_img(img,Fx,Fy,gamma,N):
         Fxt=tf.transpose(Fx,perm=[0,2,1])
         img=tf.reshape(img,[-1,B,A])
@@ -104,7 +104,7 @@ def read_attn(x,x_hat,h_dec_prev):
         return glimpse*tf.reshape(gamma,[-1,1])
     x=filter_img(x,Fx,Fy,gamma,read_n) # batch x (read_n*read_n)
     x_hat=filter_img(x_hat,Fx,Fy,gamma,read_n)
-    return tf.concat([x,x_hat], 1), mu_x, mu_y # concat along feature axis
+    return tf.concat([x,x_hat], 1), mu_x, mu_y, gx_, gy_, delta # concat along feature axis
 
 read = read_attn if FLAGS.read_attn else read_no_attn
 
@@ -148,12 +148,12 @@ def write_attn(h_dec):
         w=linear(h_dec,write_size) # batch x (write_n*write_n)
     N=write_n
     w=tf.reshape(w,[batch_size,N,N])
-    Fx,Fy,mu_x, mu_y, gamma=attn_window("write",h_dec,write_n)
+    Fx,Fy,mu_x, mu_y, gamma, gx_, gy_, delta =attn_window("write",h_dec,write_n)
     Fyt=tf.transpose(Fy,perm=[0,2,1])
     wr=tf.matmul(Fyt,tf.matmul(w,Fx))
     wr=tf.reshape(wr,[batch_size,B*A])
     #gamma=tf.tile(gamma,[1,B*A])
-    return wr*tf.reshape(1.0/gamma,[-1,1]), mu_x, mu_y
+    return wr*tf.reshape(1.0/gamma,[-1,1]), mu_x, mu_y, gx_, gy_, delta
 
 write=write_attn if FLAGS.write_attn else write_no_attn
 
@@ -174,11 +174,11 @@ viz_data = list()
 for t in range(T):
     c_prev = tf.zeros((batch_size,img_size)) if t==0 else cs[t-1]
     x_hat=x-tf.sigmoid(c_prev) # error image
-    r, r_mu_x, r_mu_y =read(x,x_hat,h_dec_prev)
+    r, r_mu_x, r_mu_y, r_gx_, r_gy_, r_delta =read(x,x_hat,h_dec_prev)
     h_enc,enc_state=encode(enc_state,tf.concat([r,h_dec_prev], 1))
     z,mus[t],logsigmas[t],sigmas[t]=sampleQ(h_enc)
     h_dec,dec_state=decode(dec_state,z)
-    write_h_dec, w_mu_x, w_mu_y = write(h_dec)
+    write_h_dec, w_mu_x, w_mu_y, w_gx_, w_gy_, w_delta = write(h_dec)
     cs[t]=c_prev+write_h_dec # store results
     h_dec_prev=h_dec
     DO_SHARE=True # from now on, share variables
@@ -186,6 +186,10 @@ for t in range(T):
         # READ
         "r_mu_x": tf.squeeze(r_mu_x, 2)[0], # batch_size x N
         "r_mu_y": tf.squeeze(r_mu_y, 2)[0],
+        "r_delta": r_delta[0], # batch_size x 1
+
+        "r_gx_": tf.squeeze(r_gx_, 1)[0], # batch_size x N
+        "r_gy_": tf.squeeze(r_gy_, 1)[0],
 
         # WRITE
         "w_mu_x": tf.squeeze(w_mu_x, 2)[0], # batch_size x N

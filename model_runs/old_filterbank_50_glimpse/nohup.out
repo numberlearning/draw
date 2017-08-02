@@ -1,0 +1,235 @@
+delta: Tensor("mul_2:0", shape=(100, 1), dtype=float32)
+delta: Tensor("mul_12:0", shape=(100, 1), dtype=float32)
+delta: Tensor("mul_20:0", shape=(100, 1), dtype=float32)
+delta: Tensor("mul_30:0", shape=(100, 1), dtype=float32)
+delta: Tensor("mul_38:0", shape=(100, 1), dtype=float32)
+delta: Tensor("mul_48:0", shape=(100, 1), dtype=float32)
+delta: Tensor("mul_56:0", shape=(100, 1), dtype=float32)
+delta: Tensor("mul_66:0", shape=(100, 1), dtype=float32)
+delta: Tensor("mul_74:0", shape=(100, 1), dtype=float32)
+delta: Tensor("mul_84:0", shape=(100, 1), dtype=float32)
+delta: Tensor("mul_92:0", shape=(100, 1), dtype=float32)
+delta: Tensor("mul_102:0", shape=(100, 1), dtype=float32)
+delta: Tensor("mul_110:0", shape=(100, 1), dtype=float32)
+delta: Tensor("mul_120:0", shape=(100, 1), dtype=float32)
+delta: Tensor("mul_128:0", shape=(100, 1), dtype=float32)
+delta: Tensor("mul_138:0", shape=(100, 1), dtype=float32)
+delta: Tensor("mul_146:0", shape=(100, 1), dtype=float32)
+delta: Tensor("mul_156:0", shape=(100, 1), dtype=float32)
+delta: Tensor("mul_164:0", shape=(100, 1), dtype=float32)
+delta: Tensor("mul_174:0", shape=(100, 1), dtype=float32)
+delta: Tensor("mul_182:0", shape=(100, 1), dtype=float32)
+delta: Tensor("mul_192:0", shape=(100, 1), dtype=float32)
+delta: Tensor("mul_200:0", shape=(100, 1), dtype=float32)
+delta: Tensor("mul_210:0", shape=(100, 1), dtype=float32)
+delta: Tensor("mul_218:0", shape=(100, 1), dtype=float32)
+delta: Tensor("mul_228:0", shape=(100, 1), dtype=float32)
+delta: Tensor("mul_236:0", shape=(100, 1), dtype=float32)
+delta: Tensor("mul_246:0", shape=(100, 1), dtype=float32)
+delta: Tensor("mul_254:0", shape=(100, 1), dtype=float32)
+delta: Tensor("mul_264:0", shape=(100, 1), dtype=float32)
+delta: Tensor("mul_272:0", shape=(100, 1), dtype=float32)
+delta: Tensor("mul_282:0", shape=(100, 1), dtype=float32)
+delta: Tensor("mul_290:0", shape=(100, 1), dtype=float32)
+delta: Tensor("mul_300:0", shape=(100, 1), dtype=float32)
+delta: Tensor("mul_308:0", shape=(100, 1), dtype=float32)
+delta: Tensor("mul_318:0", shape=(100, 1), dtype=float32)
+delta: Tensor("mul_326:0", shape=(100, 1), dtype=float32)
+delta: Tensor("mul_336:0", shape=(100, 1), dtype=float32)
+delta: Tensor("mul_344:0", shape=(100, 1), dtype=float32)
+delta: Tensor("mul_354:0", shape=(100, 1), dtype=float32)
+delta: Tensor("mul_362:0", shape=(100, 1), dtype=float32)
+delta: Tensor("mul_372:0", shape=(100, 1), dtype=float32)
+delta: Tensor("mul_380:0", shape=(100, 1), dtype=float32)
+delta: Tensor("mul_390:0", shape=(100, 1), dtype=float32)
+delta: Tensor("mul_398:0", shape=(100, 1), dtype=float32)
+delta: Tensor("mul_408:0", shape=(100, 1), dtype=float32)
+delta: Tensor("mul_416:0", shape=(100, 1), dtype=float32)
+delta: Tensor("mul_426:0", shape=(100, 1), dtype=float32)
+delta: Tensor("mul_434:0", shape=(100, 1), dtype=float32)
+delta: Tensor("mul_444:0", shape=(100, 1), dtype=float32)
+delta: Tensor("mul_452:0", shape=(100, 1), dtype=float32)
+delta: Tensor("mul_462:0", shape=(100, 1), dtype=float32)
+delta: Tensor("mul_470:0", shape=(100, 1), dtype=float32)
+delta: Tensor("mul_480:0", shape=(100, 1), dtype=float32)
+delta: Tensor("mul_488:0", shape=(100, 1), dtype=float32)
+delta: Tensor("mul_498:0", shape=(100, 1), dtype=float32)
+delta: Tensor("mul_506:0", shape=(100, 1), dtype=float32)
+delta: Tensor("mul_516:0", shape=(100, 1), dtype=float32)
+delta: Tensor("mul_524:0", shape=(100, 1), dtype=float32)
+delta: Tensor("mul_534:0", shape=(100, 1), dtype=float32)
+delta: Tensor("mul_542:0", shape=(100, 1), dtype=float32)
+delta: Tensor("mul_552:0", shape=(100, 1), dtype=float32)
+delta: Tensor("mul_560:0", shape=(100, 1), dtype=float32)
+delta: Tensor("mul_570:0", shape=(100, 1), dtype=float32)
+delta: Tensor("mul_578:0", shape=(100, 1), dtype=float32)
+delta: Tensor("mul_588:0", shape=(100, 1), dtype=float32)
+delta: Tensor("mul_596:0", shape=(100, 1), dtype=float32)
+delta: Tensor("mul_606:0", shape=(100, 1), dtype=float32)
+delta: Tensor("mul_614:0", shape=(100, 1), dtype=float32)
+delta: Tensor("mul_624:0", shape=(100, 1), dtype=float32)
+delta: Tensor("mul_632:0", shape=(100, 1), dtype=float32)
+delta: Tensor("mul_642:0", shape=(100, 1), dtype=float32)
+delta: Tensor("mul_650:0", shape=(100, 1), dtype=float32)
+delta: Tensor("mul_660:0", shape=(100, 1), dtype=float32)
+delta: Tensor("mul_668:0", shape=(100, 1), dtype=float32)
+delta: Tensor("mul_678:0", shape=(100, 1), dtype=float32)
+delta: Tensor("mul_686:0", shape=(100, 1), dtype=float32)
+delta: Tensor("mul_696:0", shape=(100, 1), dtype=float32)
+delta: Tensor("mul_704:0", shape=(100, 1), dtype=float32)
+delta: Tensor("mul_714:0", shape=(100, 1), dtype=float32)
+delta: Tensor("mul_722:0", shape=(100, 1), dtype=float32)
+delta: Tensor("mul_732:0", shape=(100, 1), dtype=float32)
+delta: Tensor("mul_740:0", shape=(100, 1), dtype=float32)
+delta: Tensor("mul_750:0", shape=(100, 1), dtype=float32)
+delta: Tensor("mul_758:0", shape=(100, 1), dtype=float32)
+delta: Tensor("mul_768:0", shape=(100, 1), dtype=float32)
+delta: Tensor("mul_776:0", shape=(100, 1), dtype=float32)
+delta: Tensor("mul_786:0", shape=(100, 1), dtype=float32)
+delta: Tensor("mul_794:0", shape=(100, 1), dtype=float32)
+delta: Tensor("mul_804:0", shape=(100, 1), dtype=float32)
+delta: Tensor("mul_812:0", shape=(100, 1), dtype=float32)
+delta: Tensor("mul_822:0", shape=(100, 1), dtype=float32)
+delta: Tensor("mul_830:0", shape=(100, 1), dtype=float32)
+delta: Tensor("mul_840:0", shape=(100, 1), dtype=float32)
+delta: Tensor("mul_848:0", shape=(100, 1), dtype=float32)
+delta: Tensor("mul_858:0", shape=(100, 1), dtype=float32)
+delta: Tensor("mul_866:0", shape=(100, 1), dtype=float32)
+delta: Tensor("mul_876:0", shape=(100, 1), dtype=float32)
+delta: Tensor("mul_884:0", shape=(100, 1), dtype=float32)
+delta: Tensor("mul_894:0", shape=(100, 1), dtype=float32)
+Successfully downloaded train-images-idx3-ubyte.gz 9912422 bytes.
+Extracting model_runs/old_filterbank_50_glimpse/mnist/train-images-idx3-ubyte.gz
+Successfully downloaded train-labels-idx1-ubyte.gz 28881 bytes.
+Extracting model_runs/old_filterbank_50_glimpse/mnist/train-labels-idx1-ubyte.gz
+Successfully downloaded t10k-images-idx3-ubyte.gz 1648877 bytes.
+Extracting model_runs/old_filterbank_50_glimpse/mnist/t10k-images-idx3-ubyte.gz
+Successfully downloaded t10k-labels-idx1-ubyte.gz 4542 bytes.
+Extracting model_runs/old_filterbank_50_glimpse/mnist/t10k-labels-idx1-ubyte.gz
+2017-08-01 13:05:05.151171: W tensorflow/core/platform/cpu_feature_guard.cc:45] The TensorFlow library wasn't compiled to use SSE4.1 instructions, but these are available on your machine and could speed up CPU computations.
+2017-08-01 13:05:05.151199: W tensorflow/core/platform/cpu_feature_guard.cc:45] The TensorFlow library wasn't compiled to use SSE4.2 instructions, but these are available on your machine and could speed up CPU computations.
+2017-08-01 13:05:05.151204: W tensorflow/core/platform/cpu_feature_guard.cc:45] The TensorFlow library wasn't compiled to use AVX instructions, but these are available on your machine and could speed up CPU computations.
+2017-08-01 13:05:05.151208: W tensorflow/core/platform/cpu_feature_guard.cc:45] The TensorFlow library wasn't compiled to use AVX2 instructions, but these are available on your machine and could speed up CPU computations.
+2017-08-01 13:05:05.151212: W tensorflow/core/platform/cpu_feature_guard.cc:45] The TensorFlow library wasn't compiled to use FMA instructions, but these are available on your machine and could speed up CPU computations.
+2017-08-01 13:05:05.234942: I tensorflow/stream_executor/cuda/cuda_gpu_executor.cc:901] successful NUMA node read from SysFS had negative value (-1), but there must be at least one NUMA node, so returning NUMA node zero
+2017-08-01 13:05:05.235227: I tensorflow/core/common_runtime/gpu/gpu_device.cc:887] Found device 0 with properties: 
+name: GeForce GTX 1080
+major: 6 minor: 1 memoryClockRate (GHz) 1.898
+pciBusID 0000:01:00.0
+Total memory: 7.92GiB
+Free memory: 5.98GiB
+2017-08-01 13:05:05.235276: W tensorflow/stream_executor/cuda/cuda_driver.cc:485] creating context when one is currently active; existing: 0x13ad6050
+2017-08-01 13:05:05.332846: I tensorflow/stream_executor/cuda/cuda_gpu_executor.cc:901] successful NUMA node read from SysFS had negative value (-1), but there must be at least one NUMA node, so returning NUMA node zero
+2017-08-01 13:05:05.333159: I tensorflow/core/common_runtime/gpu/gpu_device.cc:887] Found device 1 with properties: 
+name: GeForce GTX 1080
+major: 6 minor: 1 memoryClockRate (GHz) 1.898
+pciBusID 0000:02:00.0
+Total memory: 7.92GiB
+Free memory: 7.05GiB
+2017-08-01 13:05:05.333291: I tensorflow/core/common_runtime/gpu/gpu_device.cc:908] DMA: 0 1 
+2017-08-01 13:05:05.333298: I tensorflow/core/common_runtime/gpu/gpu_device.cc:918] 0:   Y Y 
+2017-08-01 13:05:05.333301: I tensorflow/core/common_runtime/gpu/gpu_device.cc:918] 1:   Y Y 
+2017-08-01 13:05:05.333306: I tensorflow/core/common_runtime/gpu/gpu_device.cc:977] Creating TensorFlow device (/gpu:0) -> (device: 0, name: GeForce GTX 1080, pci bus id: 0000:01:00.0)
+2017-08-01 13:05:05.333310: I tensorflow/core/common_runtime/gpu/gpu_device.cc:977] Creating TensorFlow device (/gpu:1) -> (device: 1, name: GeForce GTX 1080, pci bus id: 0000:02:00.0)
+iter=0 : Lx: 558.947693 Lz: 240.775818
+iter=100 : Lx: 214.447311 Lz: 225.297852
+iter=200 : Lx: 204.348572 Lz: 226.292130
+iter=300 : Lx: 202.056061 Lz: 226.764099
+iter=400 : Lx: 200.223755 Lz: 226.679718
+iter=500 : Lx: 196.236328 Lz: 226.361389
+iter=600 : Lx: 183.233490 Lz: 226.862854
+iter=700 : Lx: 187.448822 Lz: 226.880310
+iter=800 : Lx: 184.161514 Lz: 226.906281
+iter=900 : Lx: 174.227646 Lz: 227.131683
+iter=1000 : Lx: 174.885101 Lz: 228.157425
+iter=1100 : Lx: 167.190750 Lz: 228.805542
+iter=1200 : Lx: 158.959839 Lz: 229.421738
+iter=1300 : Lx: 146.806076 Lz: 229.561554
+iter=1400 : Lx: 149.798706 Lz: 229.473236
+iter=1500 : Lx: 144.484344 Lz: 229.347778
+iter=1600 : Lx: 135.135727 Lz: 229.949921
+iter=1700 : Lx: 126.165955 Lz: 229.635147
+iter=1800 : Lx: 130.761139 Lz: 229.344177
+iter=1900 : Lx: 130.015366 Lz: 229.658569
+iter=2000 : Lx: 122.633644 Lz: 229.378174
+iter=2100 : Lx: 121.202629 Lz: 229.266617
+iter=2200 : Lx: 117.215317 Lz: 229.152832
+iter=2300 : Lx: 107.936729 Lz: 228.898193
+iter=2400 : Lx: 108.435631 Lz: 228.980606
+iter=2500 : Lx: 108.259338 Lz: 228.990356
+iter=2600 : Lx: 112.042786 Lz: 228.414978
+iter=2700 : Lx: 114.445717 Lz: 228.899948
+iter=2800 : Lx: 102.345222 Lz: 228.982071
+iter=2900 : Lx: 103.857361 Lz: 228.653152
+iter=3000 : Lx: 91.501701 Lz: 229.022369
+iter=3100 : Lx: 96.461304 Lz: 228.900711
+iter=3200 : Lx: 94.996819 Lz: 228.939148
+iter=3300 : Lx: 87.808823 Lz: 228.972580
+iter=3400 : Lx: 90.256889 Lz: 229.334061
+iter=3500 : Lx: 81.537582 Lz: 228.523056
+iter=3600 : Lx: 83.849342 Lz: 228.405777
+iter=3700 : Lx: 79.284210 Lz: 228.348160
+iter=3800 : Lx: 84.828186 Lz: 228.631332
+iter=3900 : Lx: 68.305664 Lz: 228.050751
+iter=4000 : Lx: 77.521423 Lz: 227.955032
+iter=4100 : Lx: 71.527519 Lz: 227.984619
+iter=4200 : Lx: 74.554817 Lz: 227.760101
+iter=4300 : Lx: 72.785721 Lz: 227.905548
+iter=4400 : Lx: 67.340302 Lz: 227.460022
+iter=4500 : Lx: 65.370300 Lz: 227.478043
+iter=4600 : Lx: 65.381393 Lz: 227.404800
+iter=4700 : Lx: 63.379745 Lz: 227.109009
+iter=4800 : Lx: 68.358971 Lz: 227.340561
+iter=4900 : Lx: 66.131737 Lz: 227.027512
+iter=5000 : Lx: 64.313095 Lz: 226.913254
+iter=5100 : Lx: 65.040993 Lz: 227.197235
+iter=5200 : Lx: 62.750465 Lz: 226.902725
+iter=5300 : Lx: 60.486401 Lz: 226.880981
+iter=5400 : Lx: 60.199814 Lz: 226.614670
+iter=5500 : Lx: 61.193035 Lz: 226.712509
+iter=5600 : Lx: 58.130749 Lz: 226.463287
+iter=5700 : Lx: 59.880222 Lz: 226.572083
+iter=5800 : Lx: 57.928261 Lz: 226.452118
+iter=5900 : Lx: 58.566216 Lz: 226.474762
+iter=6000 : Lx: 61.437637 Lz: 226.384491
+iter=6100 : Lx: 55.603676 Lz: 226.301361
+iter=6200 : Lx: 58.725113 Lz: 226.258209
+iter=6300 : Lx: 57.492325 Lz: 226.267700
+iter=6400 : Lx: 57.419571 Lz: 226.224228
+iter=6500 : Lx: 55.538109 Lz: 226.117905
+iter=6600 : Lx: 54.994648 Lz: 226.118134
+iter=6700 : Lx: 56.279888 Lz: 226.088104
+iter=6800 : Lx: 54.401463 Lz: 226.083649
+iter=6900 : Lx: 56.455048 Lz: 226.010696
+iter=7000 : Lx: 53.464367 Lz: 225.958801
+iter=7100 : Lx: 53.802284 Lz: 226.026123
+iter=7200 : Lx: 55.091423 Lz: 225.903564
+iter=7300 : Lx: 55.570618 Lz: 225.959259
+iter=7400 : Lx: 54.330986 Lz: 225.855820
+iter=7500 : Lx: 55.129765 Lz: 225.964020
+iter=7600 : Lx: 55.536549 Lz: 225.807281
+iter=7700 : Lx: 53.684532 Lz: 225.909058
+iter=7800 : Lx: 53.152611 Lz: 225.741089
+iter=7900 : Lx: 54.191074 Lz: 225.894638
+iter=8000 : Lx: 52.429359 Lz: 225.767075
+iter=8100 : Lx: 57.369873 Lz: 225.830368
+iter=8200 : Lx: 54.543327 Lz: 225.737152
+iter=8300 : Lx: 53.544426 Lz: 225.690170
+iter=8400 : Lx: 53.841148 Lz: 225.693390
+iter=8500 : Lx: 54.030098 Lz: 225.728973
+iter=8600 : Lx: 53.832043 Lz: 225.766205
+iter=8700 : Lx: 52.212784 Lz: 225.759689
+iter=8800 : Lx: 54.464355 Lz: 225.683472
+iter=8900 : Lx: 53.285110 Lz: 225.659897
+iter=9000 : Lx: 52.597809 Lz: 225.670853
+iter=9100 : Lx: 52.576042 Lz: 225.717682
+iter=9200 : Lx: 52.213268 Lz: 225.621750
+iter=9300 : Lx: 52.832733 Lz: 225.623505
+iter=9400 : Lx: 50.462566 Lz: 225.635986
+iter=9500 : Lx: 49.405571 Lz: 225.530334
+iter=9600 : Lx: 51.613316 Lz: 225.589142
+iter=9700 : Lx: 52.925587 Lz: 225.599823
+iter=9800 : Lx: 50.503731 Lz: 225.571838
+iter=9900 : Lx: 51.147232 Lz: 225.531998
+Outputs saved in file: model_runs/old_filterbank_50_glimpse/draw_data.npy
+Model saved in file: model_runs/old_filterbank_50_glimpse/drawmodel.ckpt
